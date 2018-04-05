@@ -1,0 +1,26 @@
+{
+  "name": "git-switch-branch",
+  "version": "0.1.0",
+  "description": "Switch recent GIT branches fast",
+  "keywords": [
+    "git",
+    "recent",
+    "branch",
+    "switch",
+    "checkout"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/macku/git-switch-branch.git"
+  },
+  "bin": "git-switch",
+  "author": {
+    "name": "Maciej Adamczak",
+    "email": "me@maciejadamczak.net"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^2.3.2",
+    "prompts": "^0.1.8"
+  }
+}

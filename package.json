@@ -20,7 +20,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "chalk": "^2.3.2",
-    "prompts": "^0.1.8"
+    "chalk": "2.3.2",
+    "prompts": "0.1.8"
   }
 }

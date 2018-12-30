@@ -21,6 +21,6 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "2.3.2",
-    "prompts": "0.1.8"
+    "prompts": "2.0.1"
   }
 }

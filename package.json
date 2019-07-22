@@ -1,7 +1,7 @@
 {
   "name": "git-switch-branch",
-  "version": "0.1.0",
-  "description": "Switch recent GIT branches fast",
+  "version": "0.2.0",
+  "description": "Switch recent GIT branches blazingly fast",
   "keywords": [
     "git",
     "recent",
@@ -20,7 +20,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "chalk": "^2.3.2",
-    "prompts": "^0.1.8"
+    "chalk": "^2.4.2",
+    "inquirer": "^6.5.0",
+    "inquirer-autocomplete-prompt": "^1.0.1"
   }
 }

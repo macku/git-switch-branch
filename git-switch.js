@@ -4,6 +4,7 @@ const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 const inquirer = require("inquirer");
 const chalk = require("chalk");
+const { getRemoteBranches } = require("./remote-branches.js");
 const { getLocalBranches } = require("./local-branches.js");
 
 inquirer.registerPrompt(
@@ -40,8 +41,23 @@ inquirer.registerPrompt(
     });
 
     if (branch === remoteOption.value) {
-      console.log("show remote branches...");
-      process.exit(1);
+      const remoteBranches = await getRemoteBranches();
+
+      ({ branch } = await inquirer.prompt({
+        type: "autocomplete",
+        name: "branch",
+        message: "Type or select a recent remote branch from the list",
+        emptyText: "Can't find a remote GIT branch...",
+        source: (answers, input) => {
+          input = input || "";
+
+          const filteredOptions = remoteBranches.filter(({ value }) =>
+            value.match(new RegExp(input, "i"))
+          );
+
+          return Promise.resolve(filteredOptions);
+        },
+      }));
     }
 
     if (!branch) {

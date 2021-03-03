@@ -1,5 +1,5 @@
 const util = require("util");
-const chalk = require("chalk");
+const { formatCommit } = require("./git.js");
 const exec = util.promisify(require("child_process").exec);
 
 async function getRemoteRefs() {
@@ -11,33 +11,31 @@ async function getRemoteRefs() {
     `git for-each-ref --sort=-committerdate "refs/remotes/${remoteName}"`
   );
 
-  const remoteRefs = refsResult.trim().replace(/\t/g, " ").split("\n");
+  const refsMeta = refsResult.trim().replace(/\t/g, " ").split("\n");
 
-  return remoteRefs.map((ref) => {
-    const [, commitHash, remoteRef] = ref.match(
-      /^([a-z0-9]+)\s[^\s]+\srefs\/remotes\/(.+)$/
-    );
+  return (
+    refsMeta
+      .map((refMeta) => {
+        const [, commitHash, ref] = refMeta.match(
+          /^([a-z0-9]+)\s[^\s]+\srefs\/remotes\/(.+)$/
+        );
 
-    return { commitHash, remoteRef };
-  });
+        return { commitHash, ref };
+      })
+      // Remove the HEAD
+      .filter(({ ref }) => ref !== `${remoteName}/HEAD`)
+  );
 }
 
 async function getRemoteBranches() {
   const remoteRefs = await getRemoteRefs();
 
   const remoteBranches = await Promise.all(
-    remoteRefs.map(async ({ commitHash, remoteRef }) => {
-      const { stdout: result } = await exec(
-        `git log -1 --pretty="%ar\t%cn" ${commitHash}`
-      );
-      const [date, author] = result.trim().split("\t");
-
-      const description = `${chalk.green(remoteRef)}\t${chalk.yellow(
-        `(${date})`
-      )}\t${chalk.blue(author)}`;
+    remoteRefs.map(async ({ commitHash, ref }) => {
+      const description = await formatCommit({ commitHash, ref });
 
       // Get branch name from remote ref
-      const [_, ...branchParts] = remoteRef.split("/");
+      const [_, ...branchParts] = ref.split("/");
       const branchRef = branchParts.join("/");
 
       return { branchRef, description };

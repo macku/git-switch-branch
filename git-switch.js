@@ -61,9 +61,11 @@ inquirer.registerPrompt(
     }
 
     if (!branch) {
+      // TODO: Add support for creating new branch
       process.exit();
     }
 
+    // TODO: check if we can switch to a new branch
     const { stdout: gitResult, stderr: error } = await exec(`git co ${branch}`);
 
     console.log(`${chalk.bold("Branch switched to:")} ${chalk.green(branch)}`);

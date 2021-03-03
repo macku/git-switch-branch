@@ -4,6 +4,7 @@ const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 const inquirer = require("inquirer");
 const chalk = require("chalk");
+const { getLocalBranches } = require("./local-branches.js");
 
 inquirer.registerPrompt(
   "autocomplete",
@@ -12,43 +13,12 @@ inquirer.registerPrompt(
 
 (async () => {
   try {
-    const { stdout: refsResult } = await exec(
-      'git for-each-ref --sort=-committerdate "refs/heads/"'
-    );
-    const refsRaw = refsResult.trim().replace(/\t/g, " ").split("\n");
-
-    const localRefs = refsRaw.map((ref) => {
-      const [, commitHash, branchRef] = ref.match(
-        /^([a-z0-9]+)\s[^\s]+\srefs\/heads\/(.+)$/
-      );
-
-      return { commitHash, branchRef };
-    });
-
-    const localBranches = await Promise.all(
-      localRefs.map(async ({ commitHash, branchRef }) => {
-        const { stdout: result } = await exec(
-          `git log -1 --pretty="%ar\t%cn" ${commitHash}`
-        );
-        const [date, author] = result.trim().split("\t");
-
-        const description = `${chalk.green(branchRef)}\t${chalk.yellow(
-          `(${date})`
-        )}\t${chalk.blue(author)}`;
-
-        return { branchRef, description };
-      })
-    );
-
-    const localChoices = localBranches.map(({ branchRef, description }) => ({
-      name: description,
-      value: branchRef,
-    }));
-
     const remoteOption = {
       name: "(show remote branches)",
       value: Symbol.for("remote"),
     };
+
+    const localBranches = await getLocalBranches();
 
     let { branch } = await inquirer.prompt({
       type: "autocomplete",
@@ -60,7 +30,7 @@ inquirer.registerPrompt(
 
         const filteredOptions = [
           remoteOption,
-          ...localChoices.filter(({ value }) =>
+          ...localBranches.filter(({ value }) =>
             value.match(new RegExp(input, "i"))
           ),
         ];

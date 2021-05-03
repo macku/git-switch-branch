@@ -2,6 +2,15 @@ import { $ } from 'zx';
 
 $.verbose = false;
 
+const DEFAULT_REMOTE = 'origin';
+
+export async function getDefaultRemoteName() {
+    // TODO: This is a bit naive approach since there might be more remotes
+    const remoteResult = await $`git remote`;
+
+    return remoteResult.toString().trim().split('\n')[0] || DEFAULT_REMOTE;
+}
+
 // Singleton promises
 const defaultRemoteBranchNamePromise = new Promise(async (resolve) => {
     const remoteName = await getDefaultRemoteName();
@@ -44,13 +53,6 @@ export async function getDefaultBranchName() {
 
 export async function getCurrentBranchName() {
     return currentBranchNamePromise;
-}
-
-export async function getDefaultRemoteName() {
-    // TODO: This is a bit naive approach since there might be more remotes
-    const remoteResult = await $`git remote`;
-
-    return remoteResult.toString().trim().split('\n')[0];
 }
 
 export async function deleteBranch(branchName) {
@@ -134,4 +136,22 @@ export async function getCommitDateAndAuthor(commitHash) {
     const [commitDate, commitAuthor] = result.toString().trim().split('\t');
 
     return { commitDate, commitAuthor };
+}
+
+export async function getCommitHashForCurrentBranch() {
+    const result = await $`git rev-parse HEAD`;
+
+    return result.toString().trim();
+}
+
+export async function getRemoteForBranch(branch) {
+    const result = await $`git config "branch.${branch}.remote"`;
+
+    return result.toString().trim();
+}
+
+export async function getGitUrl(remote) {
+    const result = await $`git ls-remote --get-url "${remote}"`;
+
+    return result.toString().trim();
 }

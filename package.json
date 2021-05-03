@@ -13,7 +13,8 @@
     "type": "module",
     "bin": {
         "git-switch-branch": "git-switch-branch.js",
-        "git-prune-branches": "git-prune-branches.js"
+        "git-prune-branches": "git-prune-branches.js",
+        "git-pipelines": "git-pipelines.js"
     },
     "repository": {
         "type": "git",
@@ -30,6 +31,7 @@
     "dependencies": {
         "chalk": "^5.2.0",
         "debug": "^4.3.4",
+        "dotenv": "^16.0.3",
         "file-system-cache": "^2.1.1",
         "find-cache-dir": "^4.0.0",
         "inquirer": "^9.2.5",

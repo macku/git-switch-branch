@@ -4,7 +4,11 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { $ } from 'zx';
 
-import { deleteBranch } from './git.js';
+import {
+    deleteBranch,
+    getCurrentBranchName,
+    getDefaultBranchName,
+} from './git.js';
 import { getLocalBranches } from './local-branches.js';
 
 $.verbose = false;
@@ -12,9 +16,14 @@ $.verbose = false;
 try {
     console.log('Getting list of local branches...');
 
-    const localBranches = await getLocalBranches({
-        withMergedStatus: true,
-    });
+    const [localBranches, defaultBranchName, currentBranchName] =
+        await Promise.all([
+            getLocalBranches({
+                withMergedStatus: true,
+            }),
+            getDefaultBranchName(),
+            getCurrentBranchName(),
+        ]);
 
     let { branches } = await inquirer.prompt({
         type: 'checkbox',
@@ -22,7 +31,18 @@ try {
         message: 'Select local branches to delete',
         emptyText: "Can't find any local GIT branches...",
         pageSize: 15,
-        choices: () => localBranches,
+        choices: () =>
+            // TODO: Maybe consider removing the current and default branches from the list?
+            localBranches.map((option) => {
+                if (
+                    option.value === defaultBranchName ||
+                    option.value === currentBranchName
+                ) {
+                    option.disabled = true;
+                }
+
+                return option;
+            }),
     });
 
     if (!branches.length) {

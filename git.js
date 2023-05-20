@@ -15,6 +15,18 @@ export async function getDefaultRemoteBranchName() {
     return defaultRemoteBranchNamePromise;
 }
 
+export async function getDefaultBranchName() {
+    const defaultRemoteBranchName = await getDefaultRemoteBranchName();
+
+    return defaultRemoteBranchName.split('/').pop();
+}
+
+export async function getCurrentBranchName() {
+    const result = await $`git branch --show-current`;
+
+    return result.toString().trim();
+}
+
 export async function getDefaultRemoteName() {
     // TODO: This is a bit naive approach since there might be more remotes
     const remoteResult = await $`git remote`;
@@ -64,4 +76,14 @@ export async function getRemoteRefs() {
             // Remove the HEAD
             .filter(({ ref }) => ref !== `${remoteName}/HEAD`)
     );
+}
+
+export async function checkIfCommitWasMergedToDefaultBranch(commitHash) {
+    const defaultRemoteBranchName = await getDefaultRemoteBranchName();
+
+    const result =
+        await $`git branch -r ${defaultRemoteBranchName} --contains ${commitHash}`;
+
+    // The result is not empty when GIT lists a branch that contains the given commit
+    return result.toString().trim() !== '';
 }

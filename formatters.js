@@ -1,7 +1,10 @@
 import chalk from 'chalk';
 import { $ } from 'zx';
 
-import { getDefaultRemoteBranchName } from './git.js';
+import {
+    checkIfCommitWasMergedToDefaultBranch,
+    getDefaultRemoteBranchName,
+} from './git.js';
 
 export async function formatCommit({
     commitHash,
@@ -20,14 +23,14 @@ export async function formatCommit({
     }
 
     if (withMergedStatus) {
-        const defaultRemoteBranchName = await getDefaultRemoteBranchName();
-        const mergedBranchResult =
-            await $`git branch -r ${defaultRemoteBranchName} --contains ${commitHash}`;
+        const mergedCommitResult = await checkIfCommitWasMergedToDefaultBranch(
+            commitHash,
+        );
 
-        if (mergedBranchResult.toString().trim() === '') {
-            formattedMergedStatus = `${chalk.bold('❌ not merged')} - `;
-        } else {
+        if (mergedCommitResult) {
             formattedMergedStatus = `${chalk.bold('✅ merged')}     - `;
+        } else {
+            formattedMergedStatus = `${chalk.bold('❌ not merged')} - `;
         }
     }
 

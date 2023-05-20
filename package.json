@@ -1,17 +1,19 @@
 {
     "name": "git-switch-branch",
     "version": "0.3.0",
-    "description": "Switch recent GIT branches blazingly fast",
+    "description": "Switch or prune recent GIT branches blazingly fast",
     "keywords": [
         "git",
         "recent",
         "branch",
+        "prune",
         "switch",
         "checkout"
     ],
     "type": "module",
     "bin": {
-        "switch-branch": "git-switch-branch.js"
+        "git-switch-branch": "git-switch-branch.js",
+        "git-prune-branches": "git-prune-branches.js"
     },
     "repository": {
         "type": "git",
@@ -20,6 +22,9 @@
     "author": {
         "name": "Maciej Adamczak",
         "email": "me@maciejadamczak.net"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org"
     },
     "license": "MIT",
     "dependencies": {

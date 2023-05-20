@@ -10,7 +10,9 @@
         "checkout"
     ],
     "type": "module",
-    "bin": "./git-switch.js",
+    "bin": {
+        "switch-branch": "git-switch-branch.js"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/macku/git-switch-branch.git"

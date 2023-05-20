@@ -1,6 +1,6 @@
 import { $ } from 'zx';
 
-import { formatCommit } from './git.js';
+import { formatCommit } from './formatters.js';
 
 async function getRemoteRefs() {
     const remoteResult = await $`git remote`;

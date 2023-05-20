@@ -1,11 +1,18 @@
-import chalk from 'chalk';
 import { $ } from 'zx';
 
-export async function formatCommit({ commitHash, ref }) {
-    const result = await $`git log -1 --pretty="%ar\t%cn" ${commitHash}`;
-    const [date, author] = result.toString().trim().split('\t');
+$.verbose = false;
 
-    return `${chalk.green(ref)}\t${chalk.yellow(`(${date})`)}\t${chalk.blue(
-        author,
-    )}`;
+const defaultRemoteBranchNamePromise = new Promise(async (resolve) => {
+    const result = await $`git symbolic-ref --short refs/remotes/origin/HEAD`;
+    const defaultRemoteBranchName = result.toString().trim();
+
+    resolve(defaultRemoteBranchName);
+});
+
+export async function getDefaultRemoteBranchName() {
+    return defaultRemoteBranchNamePromise;
+}
+
+export async function deleteBranch(branchName) {
+    await $`git branch -D ${branchName}`;
 }

@@ -18,13 +18,16 @@ try {
         value: Symbol.for('remote'),
     };
 
+    console.log('Getting list of local branches...');
+
     const localBranches = await getLocalBranches();
 
     let { branch } = await inquirer.prompt({
         type: 'autocomplete',
         name: 'branch',
         message: 'Type or select a recent local branch from the list',
-        emptyText: "Can't find a local GIT branch...",
+        emptyText: "Can't find any local GIT branches...",
+        pageSize: 15,
         source: (answers, input) => {
             input = input || '';
 
@@ -40,6 +43,8 @@ try {
     });
 
     if (branch === remoteOption.value) {
+        console.log('Getting list of local and remote branches...');
+
         const remoteBranches = await getRemoteBranches();
 
         ({ branch } = await inquirer.prompt({
@@ -47,6 +52,7 @@ try {
             name: 'branch',
             message: 'Type or select a recent remote branch from the list',
             emptyText: "Can't find a remote GIT branch...",
+            pageSize: 15,
             source: (answers, input) => {
                 input = input || '';
 

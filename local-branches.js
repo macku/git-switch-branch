@@ -1,6 +1,6 @@
 import { $ } from 'zx';
 
-import { formatCommit } from './git.js';
+import { formatCommit } from './formatters.js';
 
 async function getLocalRefs() {
     const result =
@@ -17,11 +17,15 @@ async function getLocalRefs() {
     });
 }
 
-export async function getLocalBranches() {
+export async function getLocalBranches({ withMergedStatus = false } = {}) {
     const localBranches = [];
 
     for (const { commitHash, ref } of await getLocalRefs()) {
-        const description = await formatCommit({ commitHash, ref });
+        const description = await formatCommit({
+            commitHash,
+            ref,
+            withMergedStatus: withMergedStatus,
+        });
 
         localBranches.push({ name: description, value: ref });
     }

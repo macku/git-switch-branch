@@ -51,8 +51,6 @@ try {
         process.exit();
     }
 
-    // TODO: we can't delete branch we are on so we should render it as disabled
-
     // Let's delete them!
     for (const branch of branches) {
         await deleteBranch(branch);

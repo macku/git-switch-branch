@@ -1,32 +1,5 @@
-import { $ } from 'zx';
-
 import { formatCommit } from './formatters.js';
-
-async function getRemoteRefs() {
-    const remoteResult = await $`git remote`;
-    const remoteName = remoteResult.toString().trim().split('\n')[0];
-
-    const refsResult =
-        await $`git for-each-ref --sort=-committerdate "refs/remotes/${remoteName}"`;
-    const refsMeta = refsResult
-        .toString()
-        .trim()
-        .replace(/\t/g, ' ')
-        .split('\n');
-
-    return (
-        refsMeta
-            .map((refMeta) => {
-                const [, commitHash, ref] = refMeta.match(
-                    /^([a-z0-9]+)\s[^\s]+\srefs\/remotes\/(.+)$/,
-                );
-
-                return { commitHash, ref };
-            })
-            // Remove the HEAD
-            .filter(({ ref }) => ref !== `${remoteName}/HEAD`)
-    );
-}
+import { getRemoteRefs } from './git.js';
 
 export async function getRemoteBranches() {
     const remoteBranches = [];

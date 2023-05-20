@@ -1,14 +1,13 @@
 import chalk from 'chalk';
-import debug from 'debug';
 import { $ } from 'zx';
 
+import { wasCommitMergedToDefaultBranchCached } from './git-cached.js';
 import {
     getCurrentBranchName,
     getDefaultBranchName,
-    wasCommitMergedToDefaultBranch,
+    getDefaultRemoteBranchName,
+    getDefaultRemoteBranchRef,
 } from './git.js';
-
-const debugFormatCommit = debug('git:format:commit');
 
 export async function formatCommit({
     commitHash,
@@ -36,20 +35,18 @@ export async function formatCommit({
                 return `${chalk.bold('⏹️  current branch')} - `;
             }
 
-            const starTime = performance.now();
+            const [defaultRemoteBranchName, defaultRemoteBranchRef] =
+                await Promise.all([
+                    getDefaultRemoteBranchName(),
+                    getDefaultRemoteBranchRef(),
+                ]);
 
-            debugFormatCommit(`Getting merged status for ${commitHash}...`);
-
-            const mergedCommitResult = await wasCommitMergedToDefaultBranch(
-                commitHash,
-            );
-
-            debugFormatCommit(
-                `Getting merged status for ${commitHash} done in ${(
-                    (performance.now() - starTime) /
-                    1000
-                ).toFixed(2)} sec.`,
-            );
+            const mergedCommitResult =
+                await wasCommitMergedToDefaultBranchCached(
+                    defaultRemoteBranchName,
+                    defaultRemoteBranchRef,
+                    commitHash,
+                );
 
             if (mergedCommitResult) {
                 return `${chalk.bold('✅ merged')}         - `;

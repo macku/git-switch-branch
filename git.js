@@ -12,6 +12,14 @@ const defaultRemoteBranchNamePromise = new Promise(async (resolve) => {
     resolve(defaultRemoteBranchName);
 });
 
+const defaultRemoteBranchRefPromise = new Promise(async (resolve) => {
+    const defaultRemoveBranchName = await defaultRemoteBranchNamePromise;
+    const result = await $`git rev-parse --quiet ${defaultRemoveBranchName}`;
+    const defaultRemoteBranchRef = result.toString().trim();
+
+    resolve(defaultRemoteBranchRef);
+});
+
 const currentBranchNamePromise = new Promise(async (resolve) => {
     const result = await $`git branch --show-current`;
 
@@ -22,6 +30,10 @@ const currentBranchNamePromise = new Promise(async (resolve) => {
 
 export async function getDefaultRemoteBranchName() {
     return defaultRemoteBranchNamePromise;
+}
+
+export async function getDefaultRemoteBranchRef() {
+    return defaultRemoteBranchRefPromise;
 }
 
 export async function getDefaultBranchName() {
@@ -85,9 +97,11 @@ export async function getRemoteRefs() {
     );
 }
 
-export async function wasCommitMergedToDefaultBranch(commitHash) {
-    const defaultRemoteBranchName = await getDefaultRemoteBranchName();
-
+export async function wasCommitMergedToDefaultBranch(
+    defaultRemoteBranchName,
+    defaultRemoteBranchRef,
+    commitHash,
+) {
     // The result is not empty when GIT lists a branch that contains the given commit
     const defaultBranchIncludesLastCommitResult =
         (
@@ -99,12 +113,12 @@ export async function wasCommitMergedToDefaultBranch(commitHash) {
     // Now, let's check squashed branches
     // Inspired by https://blog.takanabe.tokyo/en/2020/04/remove-squash-merged-local-git-branches/
     const ancestor =
-        await $`git merge-base ${defaultRemoteBranchName} ${commitHash}`;
+        await $`git merge-base ${defaultRemoteBranchRef} ${commitHash}`;
     const gitRevParseResult = await $`git rev-parse ${commitHash}^{tree}`;
     const gitCommitTreeResult =
         await $`git commit-tree ${gitRevParseResult} -p ${ancestor} -m _`;
     const gitCherryResult =
-        await $`git cherry ${defaultRemoteBranchName} ${gitCommitTreeResult}`;
+        await $`git cherry ${defaultRemoteBranchRef} ${gitCommitTreeResult}`;
 
     const commitWasSquashMerged = gitCherryResult
         .toString()

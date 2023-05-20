@@ -30,6 +30,8 @@
     "dependencies": {
         "chalk": "^5.2.0",
         "debug": "^4.3.4",
+        "file-system-cache": "^2.1.1",
+        "find-cache-dir": "^4.0.0",
         "inquirer": "^9.2.5",
         "inquirer-autocomplete-prompt": "^3.0.0",
         "zx": "^7.2.2"

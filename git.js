@@ -78,12 +78,31 @@ export async function getRemoteRefs() {
     );
 }
 
-export async function checkIfCommitWasMergedToDefaultBranch(commitHash) {
+export async function wasCommitMergedToDefaultBranch(commitHash) {
     const defaultRemoteBranchName = await getDefaultRemoteBranchName();
 
-    const result =
-        await $`git branch -r ${defaultRemoteBranchName} --contains ${commitHash}`;
-
     // The result is not empty when GIT lists a branch that contains the given commit
-    return result.toString().trim() !== '';
+    const defaultBranchIncludesLastCommitResult =
+        (
+            await $`git branch -r ${defaultRemoteBranchName} --contains ${commitHash}`
+        )
+            .toString()
+            .trim() !== '';
+
+    // Now, let's check squashed branches
+    // Inspired by https://blog.takanabe.tokyo/en/2020/04/remove-squash-merged-local-git-branches/
+    const ancestor =
+        await $`git merge-base ${defaultRemoteBranchName} ${commitHash}`;
+    const gitRevParseResult = await $`git rev-parse ${commitHash}^{tree}`;
+    const gitCommitTreeResult =
+        await $`git commit-tree ${gitRevParseResult} -p ${ancestor} -m _`;
+    const gitCherryResult =
+        await $`git cherry ${defaultRemoteBranchName} ${gitCommitTreeResult}`;
+
+    const commitWasSquashMerged = gitCherryResult
+        .toString()
+        .trim()
+        .startsWith('-');
+
+    return defaultBranchIncludesLastCommitResult || commitWasSquashMerged;
 }

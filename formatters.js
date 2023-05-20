@@ -2,8 +2,9 @@ import chalk from 'chalk';
 import { $ } from 'zx';
 
 import {
-    checkIfCommitWasMergedToDefaultBranch,
-    getDefaultRemoteBranchName,
+    getCurrentBranchName,
+    getDefaultBranchName,
+    wasCommitMergedToDefaultBranch,
 } from './git.js';
 
 export async function formatCommit({
@@ -23,15 +24,25 @@ export async function formatCommit({
     }
 
     if (withMergedStatus) {
-        const mergedCommitResult = await checkIfCommitWasMergedToDefaultBranch(
-            commitHash,
-        );
+        formattedMergedStatus = await (async () => {
+            if (ref === (await getDefaultBranchName())) {
+                return `${chalk.bold('⏹️  default branch')} - `;
+            }
 
-        if (mergedCommitResult) {
-            formattedMergedStatus = `${chalk.bold('✅ merged')}     - `;
-        } else {
-            formattedMergedStatus = `${chalk.bold('❌ not merged')} - `;
-        }
+            if (ref === (await getCurrentBranchName())) {
+                return `${chalk.bold('⏹️  current branch')} - `;
+            }
+
+            const mergedCommitResult = await wasCommitMergedToDefaultBranch(
+                commitHash,
+            );
+
+            if (mergedCommitResult) {
+                return `${chalk.bold('✅ merged')}         - `;
+            } else {
+                return `${chalk.bold('❌ not merged')}     - `;
+            }
+        })();
     }
 
     const formattedRef = `${chalk.green(ref)}`;

@@ -2,6 +2,7 @@ import { $ } from 'zx';
 
 $.verbose = false;
 
+// Singleton promises
 const defaultRemoteBranchNamePromise = new Promise(async (resolve) => {
     const remoteName = await getDefaultRemoteName();
     const result =
@@ -9,6 +10,14 @@ const defaultRemoteBranchNamePromise = new Promise(async (resolve) => {
     const defaultRemoteBranchName = result.toString().trim();
 
     resolve(defaultRemoteBranchName);
+});
+
+const currentBranchNamePromise = new Promise(async (resolve) => {
+    const result = await $`git branch --show-current`;
+
+    const currentBranchName = result.toString().trim();
+
+    resolve(currentBranchName);
 });
 
 export async function getDefaultRemoteBranchName() {
@@ -22,9 +31,7 @@ export async function getDefaultBranchName() {
 }
 
 export async function getCurrentBranchName() {
-    const result = await $`git branch --show-current`;
-
-    return result.toString().trim();
+    return currentBranchNamePromise;
 }
 
 export async function getDefaultRemoteName() {

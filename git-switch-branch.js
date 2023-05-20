@@ -18,9 +18,15 @@ try {
         value: Symbol.for('remote'),
     };
 
-    console.log('Getting list of local branches...');
+    console.log('👀 Getting list of local GIT branches...');
 
     const localBranches = await getLocalBranches();
+
+    console.log(
+        `🔎 We have found ${chalk.bold(
+            localBranches.length,
+        )} local GIT branches.`,
+    );
 
     let { branch } = await inquirer.prompt({
         type: 'autocomplete',

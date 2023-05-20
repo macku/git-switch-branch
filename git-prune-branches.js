@@ -14,7 +14,7 @@ import { getLocalBranches } from './local-branches.js';
 $.verbose = false;
 
 try {
-    console.log('Getting list of local branches...');
+    console.log('👀 Getting list of local GIT branches...');
 
     const [localBranches, defaultBranchName, currentBranchName] =
         await Promise.all([
@@ -25,10 +25,16 @@ try {
             getCurrentBranchName(),
         ]);
 
+    console.log(
+        `🔎 We have found ${chalk.bold(
+            localBranches.length,
+        )} local GIT branches.`,
+    );
+
     let { branches } = await inquirer.prompt({
         type: 'checkbox',
         name: 'branches',
-        message: 'Select local branches to delete',
+        message: 'Select local GIT branches to delete',
         emptyText: "Can't find any local GIT branches...",
         pageSize: 15,
         choices: () =>
@@ -54,16 +60,18 @@ try {
 
     console.log();
     console.log(
-        `${chalk.bold('Selected branches:')}\n${chalk.green(
-            branches.join('\n'),
-        )}`,
+        `${chalk.bold(
+            `Selected branches (${branches.length}):`,
+        )}\n${chalk.green(branches.join('\n'))}`,
     );
 
     let { answer } = await inquirer.prompt({
         type: 'confirm',
         name: 'answer',
         default: false,
-        message: 'Are you sure you want to delete selected local branches?',
+        message: `Are you sure you want to delete ${chalk.bold(
+            `${branches.length} selected local branches`,
+        )}?`,
     });
 
     if (!answer) {
@@ -77,7 +85,9 @@ try {
     }
 
     console.log(
-        `${chalk.bold('✅ All selected local branches were deleted. Bye! 👋')}`,
+        `${chalk.bold(
+            `✅ All ${branches.length} selected local branches were deleted. Bye! 👋`,
+        )}`,
     );
 } catch (error) {
     console.error(error.stack);

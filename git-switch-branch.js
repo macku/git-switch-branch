@@ -49,9 +49,15 @@ try {
     });
 
     if (branch === remoteOption.value) {
-        console.log('Getting list of local and remote branches...');
+        console.log('👀 Getting list of local and remote GIT branches...');
 
         const remoteBranches = await getRemoteBranches();
+
+        console.log(
+            `🔎 We have found ${chalk.bold(
+                remoteBranches.length,
+            )} local and remote GIT branches.`,
+        );
 
         ({ branch } = await inquirer.prompt({
             type: 'autocomplete',

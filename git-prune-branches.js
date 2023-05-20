@@ -14,7 +14,9 @@ import { getLocalBranches } from './local-branches.js';
 $.verbose = false;
 
 try {
-    console.log('👀 Getting list of local GIT branches...');
+    console.log(
+        '👀 Getting list of local GIT branches. This can take a while if you have a lot of local branches or the repository is big...',
+    );
 
     const [localBranches, defaultBranchName, currentBranchName] =
         await Promise.all([

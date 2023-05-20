@@ -2,17 +2,18 @@ import { formatCommit } from './formatters.js';
 import { getLocalRefs } from './git.js';
 
 export async function getLocalBranches({ withMergedStatus = false } = {}) {
-    const localBranches = [];
+    const localRefs = await getLocalRefs();
 
-    for (const { commitHash, ref } of await getLocalRefs()) {
-        const description = await formatCommit({
+    const localBranchesPromises = localRefs.map(({ commitHash, ref }) =>
+        formatCommit({
             commitHash,
             ref,
-            withMergedStatus: withMergedStatus,
-        });
+            withMergedStatus,
+        }).then((label) => ({
+            name: label,
+            value: ref,
+        })),
+    );
 
-        localBranches.push({ name: description, value: ref });
-    }
-
-    return localBranches;
+    return await Promise.all(localBranchesPromises);
 }

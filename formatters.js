@@ -1,7 +1,9 @@
 import chalk from 'chalk';
-import { $ } from 'zx';
 
-import { wasCommitMergedToDefaultBranchCached } from './git-cached.js';
+import {
+    getCommitDateAndAuthorCached,
+    wasCommitMergedToDefaultBranchCached,
+} from './git-cached.js';
 import {
     getCurrentBranchName,
     getDefaultBranchName,
@@ -15,8 +17,9 @@ export async function formatCommit({
     withHash = true,
     withMergedStatus = false,
 }) {
-    const result = await $`git log -1 --pretty="%ar\t%cn" ${commitHash}`;
-    const [date, author] = result.toString().trim().split('\t');
+    const { commitDate, commitAuthor } = await getCommitDateAndAuthorCached(
+        commitHash,
+    );
 
     let formattedMergedStatus = '';
     let formattedHash = '';
@@ -57,8 +60,8 @@ export async function formatCommit({
     }
 
     const formattedRef = `${chalk.green(ref)}`;
-    const formattedDate = `  ${chalk.yellow(`(${date})`)}`;
-    const formattedAuthor = ` ${chalk.blue(author)}`;
+    const formattedDate = `  ${chalk.yellow(`(${commitDate})`)}`;
+    const formattedAuthor = ` ${chalk.blue(commitAuthor)}`;
 
     return [
         formattedMergedStatus,

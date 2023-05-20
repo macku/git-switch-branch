@@ -127,3 +127,11 @@ export async function wasCommitMergedToDefaultBranch(
 
     return defaultBranchIncludesLastCommitResult || commitWasSquashMerged;
 }
+
+export async function getCommitDateAndAuthor(commitHash) {
+    const result = await $`git log -1 --pretty="%ar\t%cn" ${commitHash}`;
+
+    const [commitDate, commitAuthor] = result.toString().trim().split('\t');
+
+    return { commitDate, commitAuthor };
+}

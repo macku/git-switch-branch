@@ -29,22 +29,20 @@ async function getRemoteRefs() {
 }
 
 export async function getRemoteBranches() {
-    const remoteRefs = await getRemoteRefs();
+    const remoteBranches = [];
 
-    const remoteBranches = await Promise.all(
-        remoteRefs.map(async ({ commitHash, ref }) => {
-            const description = await formatCommit({ commitHash, ref });
+    for (const { commitHash, ref } of await getRemoteRefs()) {
+        const description = await formatCommit({ commitHash, ref });
 
-            // Get branch name from remote ref
-            const [_, ...branchParts] = ref.split('/');
-            const branchRef = branchParts.join('/');
+        // Get branch name from remote ref
+        const [_, ...branchParts] = ref.split('/');
+        const branchRef = branchParts.join('/');
 
-            return { branchRef, description };
-        }),
-    );
+        remoteBranches.push({
+            name: description,
+            value: branchRef,
+        });
+    }
 
-    return remoteBranches.map(({ branchRef, description }) => ({
-        name: description,
-        value: branchRef,
-    }));
+    return remoteBranches;
 }

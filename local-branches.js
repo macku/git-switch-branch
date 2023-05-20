@@ -18,19 +18,13 @@ async function getLocalRefs() {
 }
 
 export async function getLocalBranches() {
-    const localRefs = await getLocalRefs();
+    const localBranches = [];
 
-    const localBranches = await Promise.all(
-        localRefs.map(async ({ commitHash, ref }) => {
-            const description = await formatCommit({ commitHash, ref });
-            const branchRef = ref;
+    for (const { commitHash, ref } of await getLocalRefs()) {
+        const description = await formatCommit({ commitHash, ref });
 
-            return { branchRef, description };
-        }),
-    );
+        localBranches.push({ name: description, value: ref });
+    }
 
-    return localBranches.map(({ branchRef, description }) => ({
-        name: description,
-        value: branchRef,
-    }));
+    return localBranches;
 }

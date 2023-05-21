@@ -37,12 +37,22 @@ try {
         source: (answers, input) => {
             input = input || '';
 
-            const filteredOptions = [
-                remoteOption,
+            const filteredOptions = [];
+
+            if (input === '') {
+                filteredOptions.push(remoteOption);
+            }
+
+            filteredOptions.push(
                 ...localBranches.filter(({ value }) =>
                     value.match(new RegExp(input, 'i')),
                 ),
-            ];
+            );
+
+            // Show remote option if we can't find any branches
+            if (filteredOptions.length === 0) {
+                filteredOptions.push(remoteOption);
+            }
 
             return Promise.resolve(filteredOptions);
         },

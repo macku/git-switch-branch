@@ -87,17 +87,15 @@ try {
     }
 
     console.log(
-        `${chalk.bold(
+        chalk.bold(
             `✅ All ${branches.length} selected local branches were deleted. Bye! 👋`,
-        )}`,
+        ),
     );
 } catch (error) {
-    console.error(error.stack);
-
     console.log(
         `${chalk.bold(
-            'Ups. Cannot switch to branch due error:',
-        )}\n\n${chalk.red(error)}`,
+            'Ups. Cannot prune branches due to an error:',
+        )}\n\n${chalk.red(error.stack)}`,
     );
     process.exit(1);
 }

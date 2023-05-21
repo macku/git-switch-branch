@@ -93,17 +93,17 @@ try {
     }
 
     // TODO: check if we can switch to a new branch
-    const { stdout: gitResult, stderr: error } =
-        await $`git checkout ${branch}`;
-
-    console.log(`${chalk.bold('Branch switched to:')} ${chalk.green(branch)}`);
-} catch (error) {
-    console.error(error.stack);
+    await $`git checkout ${branch}`;
 
     console.log(
-        `${chalk.bold(
-            'Ups. Cannot switch to branch due to an error:',
-        )}\n\n${chalk.red(error)}`,
+        `✅ ${chalk.bold('Branch switched to:')} ${chalk.green(branch)}`,
     );
+} catch (error) {
+    console.log(
+        `${chalk.bold(
+            'Ups. Cannot switch to a branch due to an error:',
+        )}\n\n${chalk.red(error.stack)}`,
+    );
+
     process.exit(1);
 }

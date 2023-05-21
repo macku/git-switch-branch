@@ -30,12 +30,12 @@ export async function formatCommit({
 
     if (withMergedStatus) {
         formattedMergedStatus = await (async () => {
-            if (ref === (await getDefaultBranchName())) {
-                return `${chalk.bold('⏹️  default branch')} - `;
-            }
-
             if (ref === (await getCurrentBranchName())) {
                 return `${chalk.bold('⏹️  current branch')} - `;
+            }
+
+            if (ref === (await getDefaultBranchName())) {
+                return `${chalk.bold('⏹️  default branch')} - `;
             }
 
             const [defaultRemoteBranchName, defaultRemoteBranchRef] =

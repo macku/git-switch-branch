@@ -15,7 +15,7 @@ $.verbose = false;
 
 try {
     console.log(
-        '👀 Getting list of local GIT branches. This can take a while if you have a lot of local branches or the repository is big...',
+        '👀 Getting list of local GIT branches. This can take a while if you have a lot of local branches or the repository is big...'
     );
 
     const [localBranches, defaultBranchName, currentBranchName] =
@@ -29,8 +29,8 @@ try {
 
     console.log(
         `🔎 We have found ${chalk.bold(
-            localBranches.length,
-        )} local GIT branches.`,
+            localBranches.length
+        )} local GIT branches.`
     );
 
     let { branches } = await inquirer.prompt({
@@ -55,7 +55,7 @@ try {
 
     if (!branches.length) {
         console.log(
-            `${chalk.bold('✅ No branches selected. Nothing to do, bye! 👋')}`,
+            `${chalk.bold('✅ No branches selected. Nothing to do, bye! 👋')}`
         );
         process.exit();
     }
@@ -63,8 +63,8 @@ try {
     console.log();
     console.log(
         `${chalk.bold(
-            `Selected branches (${branches.length}):`,
-        )}\n${chalk.green(branches.join('\n'))}`,
+            `Selected branches (${branches.length}):`
+        )}\n${chalk.green(branches.join('\n'))}`
     );
 
     let { answer } = await inquirer.prompt({
@@ -72,7 +72,7 @@ try {
         name: 'answer',
         default: false,
         message: `Are you sure you want to delete ${chalk.bold(
-            `${branches.length} selected local branches`,
+            `${branches.length} selected local branches`
         )}?`,
     });
 
@@ -88,14 +88,14 @@ try {
 
     console.log(
         chalk.bold(
-            `✅ All ${branches.length} selected local branches were deleted. Bye! 👋`,
-        ),
+            `✅ All ${branches.length} selected local branches were deleted. Bye! 👋`
+        )
     );
 } catch (error) {
     console.log(
         `${chalk.bold(
-            'Ups. Cannot prune branches due to an error:',
-        )}\n\n${chalk.red(error.stack)}`,
+            'Ups. Cannot prune branches due to an error:'
+        )}\n\n${chalk.red(error.stack)}`
     );
     process.exit(1);
 }

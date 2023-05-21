@@ -25,7 +25,7 @@ const getRepoSlugFromUrl = (url) => {
 const getBaseUrl = () => {
     assert.ok(
         process.env.BITBUCKET_DC_URL,
-        'The "BITBUCKET_DC_URL" value is missing. You need to create the ~/.atl-config file and provide a valid Bitbucket DC URL',
+        'The "BITBUCKET_DC_URL" value is missing. You need to create the ~/.atl-config file and provide a valid Bitbucket DC URL'
     );
 
     return process.env.BITBUCKET_DC_URL;
@@ -34,7 +34,7 @@ const getBaseUrl = () => {
 const getAuthKey = () => {
     assert.ok(
         process.env.BITBUCKET_DC_TOKEN,
-        'The "BITBUCKET_DC_TOKEN" value is missing. You need to create the ~/.atl-config file and provide a valid token',
+        'The "BITBUCKET_DC_TOKEN" value is missing. You need to create the ~/.atl-config file and provide a valid token'
     );
 
     return process.env.BITBUCKET_DC_TOKEN;
@@ -55,7 +55,7 @@ export async function getBuildResultsForCommit(remoteUrl, commitHash) {
 
     if (!response.ok) {
         throw new Error(
-            `Error fetching build results for commit ${commitHash}: ${response.status} ${response.statusText}`,
+            `Error fetching build results for commit ${commitHash}: ${response.status} ${response.statusText}`
         );
     }
 

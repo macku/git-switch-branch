@@ -24,10 +24,10 @@ try {
 
     console.log(
         `👀 Searching for builds for branch ${chalk.bold(
-            '%s',
+            '%s'
         )} with commit ${chalk.bold('%s')}...`,
         branchName,
-        commitHash,
+        commitHash
     );
 
     const normalizedRemoteUrl = normalizeRemoteUrl(remoteUrl);
@@ -35,7 +35,7 @@ try {
 
     if (!buildsProvider || typeof buildsProvider !== 'function') {
         throw new Error(
-            `Can't find or resolve builds provider for ${remoteUrl.toString()} GIT remote`,
+            `Can't find or resolve builds provider for ${remoteUrl.toString()} GIT remote`
         );
     }
 
@@ -49,8 +49,8 @@ try {
         console.log(`
         ${chalk.bold(
             `🤔 We haven't found any builds for the ${chalk.green(
-                commitHash,
-            )} commit`,
+                commitHash
+            )} commit`
         )}`);
         process.exit(0);
     }
@@ -58,11 +58,11 @@ try {
     console.log(
         buildResults.length > 1
             ? `🔎 There are ${chalk.bold(
-                  buildResults.length,
+                  buildResults.length
               )} builds for the ${chalk.green(commitHash)} commit:`
             : `🔎 There is ${chalk.bold(
-                  buildResults.length,
-              )} build for the ${chalk.green(commitHash)} commit:`,
+                  buildResults.length
+              )} build for the ${chalk.green(commitHash)} commit:`
     );
 
     for (let buildStatus of buildResults) {
@@ -76,7 +76,7 @@ try {
                     : buildStatus.state === 'INPROGRESS'
                     ? chalk.bold.blue('🕑 In progress')
                     : chalk.bold.grey('❔ Unknown')
-            } - ${chalk.bold(buildStatus.name)}`,
+            } - ${chalk.bold(buildStatus.name)}`
         );
         console.log(`   ${buildStatus.url}`);
     }
@@ -84,7 +84,7 @@ try {
     console.log('');
 } catch (error) {
     console.log(
-        `${chalk.bold('Ups. We have an error.')}\n\n${chalk.red(error.stack)}`,
+        `${chalk.bold('Ups. We have an error.')}\n\n${chalk.red(error.stack)}`
     );
     process.exit(1);
 }

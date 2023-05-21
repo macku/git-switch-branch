@@ -14,7 +14,7 @@ export async function getRemoteBranches({ withMergedStatus = false } = {}) {
                 name: label,
                 value: branchRef,
             };
-        }),
+        })
     );
 
     return await Promise.all(remoteBranchesPromises);

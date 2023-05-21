@@ -30,7 +30,7 @@ export async function getBuildsProvider(remoteUrl) {
 
         default:
             throw new Error(
-                `Can't find or resolve builds provider for ${remoteUrl.toString()} GIT remote`,
+                `Can't find or resolve builds provider for ${remoteUrl.toString()} GIT remote`
             );
     }
 }

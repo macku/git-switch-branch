@@ -18,7 +18,7 @@ export async function formatCommit({
     withMergedStatus = false,
 }) {
     const { commitDate, commitAuthor } = await getCommitDateAndAuthorCached(
-        commitHash,
+        commitHash
     );
 
     let formattedMergedStatus = '';
@@ -48,7 +48,7 @@ export async function formatCommit({
                 await wasCommitMergedToDefaultBranchCached(
                     defaultRemoteBranchName,
                     defaultRemoteBranchRef,
-                    commitHash,
+                    commitHash
                 );
 
             if (mergedCommitResult) {

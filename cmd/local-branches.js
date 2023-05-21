@@ -12,7 +12,7 @@ export async function getLocalBranches({ withMergedStatus = false } = {}) {
         }).then((label) => ({
             name: label,
             value: ref,
-        })),
+        }))
     );
 
     return await Promise.all(localBranchesPromises);

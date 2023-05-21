@@ -27,16 +27,16 @@ const getRepoSlugFromUrl = (url) => {
 const getAuthKey = () => {
     assert.ok(
         process.env.BITBUCKET_CLOUD_USERNAME,
-        'The "BITBUCKET_CLOUD_USERNAME" value is missing. You need to create the ~/.atl-config file and provide a valid user name',
+        'The "BITBUCKET_CLOUD_USERNAME" value is missing. You need to create the ~/.atl-config file and provide a valid user name'
     );
 
     assert.ok(
         process.env.BITBUCKET_CLOUD_TOKEN,
-        'The "BITBUCKET_CLOUD_TOKEN" value is missing. You need to create the ~/.atl-config file and provide a valid app token',
+        'The "BITBUCKET_CLOUD_TOKEN" value is missing. You need to create the ~/.atl-config file and provide a valid app token'
     );
 
     return Buffer.from(
-        `${process.env.BITBUCKET_CLOUD_USERNAME}:${process.env.BITBUCKET_CLOUD_TOKEN}`,
+        `${process.env.BITBUCKET_CLOUD_USERNAME}:${process.env.BITBUCKET_CLOUD_TOKEN}`
     ).toString('base64');
 };
 
@@ -58,7 +58,7 @@ export async function getBuildResultsForCommit(remoteUrl, commitHash) {
 
     if (!response.ok) {
         throw new Error(
-            `Error fetching build results for commit ${commitHash}: ${response.status} ${response.statusText}`,
+            `Error fetching build results for commit ${commitHash}: ${response.status} ${response.statusText}`
         );
     }
 

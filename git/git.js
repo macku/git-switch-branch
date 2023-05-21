@@ -67,7 +67,7 @@ export async function getLocalRefs() {
 
     return refsMeta.map((refMeta) => {
         const [, commitHash, ref] = refMeta.match(
-            /^([a-z0-9]+)\s[^\s]+\srefs\/heads\/(.+)$/,
+            /^([a-z0-9]+)\s[^\s]+\srefs\/heads\/(.+)$/
         );
 
         return { commitHash, ref };
@@ -89,7 +89,7 @@ export async function getRemoteRefs() {
         refsMeta
             .map((refMeta) => {
                 const [, commitHash, ref] = refMeta.match(
-                    /^([a-z0-9]+)\s[^\s]+\srefs\/remotes\/(.+)$/,
+                    /^([a-z0-9]+)\s[^\s]+\srefs\/remotes\/(.+)$/
                 );
 
                 return { commitHash, ref };
@@ -102,7 +102,7 @@ export async function getRemoteRefs() {
 export async function wasCommitMergedToDefaultBranch(
     defaultRemoteBranchName,
     defaultRemoteBranchRef,
-    commitHash,
+    commitHash
 ) {
     // The result is not empty when GIT lists a branch that contains the given commit
     const defaultBranchIncludesLastCommitResult =

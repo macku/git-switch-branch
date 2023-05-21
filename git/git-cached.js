@@ -19,7 +19,7 @@ const NO_VALUE = Symbol.for('NO_VALUE');
 export async function wasCommitMergedToDefaultBranchCached(
     defaultRemoteBranchName,
     defaultRemoteBranchRef,
-    commitHash,
+    commitHash
 ) {
     const starTime = performance.now();
     debugGit(`Getting merged status for ${commitHash}...`);
@@ -43,7 +43,7 @@ export async function wasCommitMergedToDefaultBranchCached(
         value = await wasCommitMergedToDefaultBranch(
             defaultRemoteBranchName,
             defaultRemoteBranchRef,
-            commitHash,
+            commitHash
         );
 
         try {
@@ -55,7 +55,7 @@ export async function wasCommitMergedToDefaultBranchCached(
         `Getting merged status for ${commitHash} done in ${(
             (performance.now() - starTime) /
             1000
-        ).toFixed(2)} sec.`,
+        ).toFixed(2)} sec.`
     );
 
     return value;
@@ -87,7 +87,7 @@ export async function getCommitDateAndAuthorCached(commitHash) {
             (performance.now() - starTime) /
             1000
         ).toFixed(2)} sec.`,
-        value,
+        value
     );
 
     return value;

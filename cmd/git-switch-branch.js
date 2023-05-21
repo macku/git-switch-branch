@@ -24,8 +24,8 @@ try {
 
     console.log(
         `🔎 We have found ${chalk.bold(
-            localBranches.length,
-        )} local GIT branches.`,
+            localBranches.length
+        )} local GIT branches.`
     );
 
     let { branch } = await inquirer.prompt({
@@ -45,8 +45,8 @@ try {
 
             filteredOptions.push(
                 ...localBranches.filter(({ value }) =>
-                    value.match(new RegExp(input, 'i')),
-                ),
+                    value.match(new RegExp(input, 'i'))
+                )
             );
 
             // Show remote option if we can't find any branches
@@ -65,8 +65,8 @@ try {
 
         console.log(
             `🔎 We have found ${chalk.bold(
-                remoteBranches.length,
-            )} local and remote GIT branches.`,
+                remoteBranches.length
+            )} local and remote GIT branches.`
         );
 
         ({ branch } = await inquirer.prompt({
@@ -79,7 +79,7 @@ try {
                 input = input || '';
 
                 const filteredOptions = remoteBranches.filter(({ value }) =>
-                    value.match(new RegExp(input, 'i')),
+                    value.match(new RegExp(input, 'i'))
                 );
 
                 return Promise.resolve(filteredOptions);
@@ -96,13 +96,13 @@ try {
     await $`git checkout ${branch}`;
 
     console.log(
-        `✅ ${chalk.bold('Branch switched to:')} ${chalk.green(branch)}`,
+        `✅ ${chalk.bold('Branch switched to:')} ${chalk.green(branch)}`
     );
 } catch (error) {
     console.log(
         `${chalk.bold(
-            'Ups. Cannot switch to a branch due to an error:',
-        )}\n\n${chalk.red(error.stack)}`,
+            'Ups. Cannot switch to a branch due to an error:'
+        )}\n\n${chalk.red(error.stack)}`
     );
 
     process.exit(1);

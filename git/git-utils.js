@@ -3,7 +3,7 @@ const GIT_SUFFIX_REG_EXP = /\.git$/i;
 
 const normalizeValidRemoteUrl = (
     remoteUrl,
-    { withPort = false, withOrgProtocol = false } = {},
+    { withPort = false, withOrgProtocol = false } = {}
 ) => {
     // Get base URL without ports
     const baseUrl = remoteUrl.hostname;
@@ -19,7 +19,7 @@ const normalizeValidRemoteUrl = (
 
 const normalizeCustomRemoteUrl = (
     remoteString,
-    { withPorts = false, withOrgProtocol = false } = {},
+    { withPorts = false, withOrgProtocol = false } = {}
 ) => {
     let pathname;
     let splitResult;
@@ -57,7 +57,7 @@ const normalizeCustomRemoteUrl = (
 
 export function normalizeRemoteUrl(
     remoteUrl,
-    { withPort = false, withOrgProtocol = false } = {},
+    { withPort = false, withOrgProtocol = false } = {}
 ) {
     try {
         const url = new URL(remoteUrl);

@@ -1,33 +1,73 @@
-const PROTOCOL_REG_EXP = /^([^\:]+):\/\//;
+const PROTOCOL_REG_EXP = /^([^:]+):\/\//;
 const GIT_SUFFIX_REG_EXP = /\.git$/i;
 
-export function normalizeGitUrl(gitUrl) {
-    let uri;
+const normalizeValidRemoteUrl = (
+    remoteUrl,
+    { withPort = false, withOrgProtocol = false } = {},
+) => {
+    // Get base URL without ports
+    const baseUrl = remoteUrl.hostname;
+
+    // Remove ".git" suffix
+    const newPath = remoteUrl.pathname.replace(GIT_SUFFIX_REG_EXP, '');
+
+    const port = withPort ? `:${remoteUrl.port}` : '';
+    const protocol = withOrgProtocol ? `${remoteUrl.protocol}` : 'https:';
+
+    return new URL(`${protocol}//${baseUrl}${port}${newPath}`);
+};
+
+const normalizeCustomRemoteUrl = (
+    remoteString,
+    { withPorts = false, withOrgProtocol = false } = {},
+) => {
+    let pathname;
     let splitResult;
 
     // Get protocol
-    let match = gitUrl.match(PROTOCOL_REG_EXP);
-    let protocol = match ? match.pop() : 'https';
+    let match = remoteString.match(PROTOCOL_REG_EXP);
+    let protocol = (withOrgProtocol && match && `${match.pop()}:`) || 'https:';
 
     // Remove username
-    splitResult = gitUrl.split('@');
+    splitResult = remoteString.split('@');
 
     if (splitResult.length >= 2) {
-        uri = splitResult.slice(1).join('@');
+        pathname = splitResult.slice(1).join('@');
     } else {
-        uri = splitResult.join('');
+        pathname = splitResult.join('');
     }
 
-    // Split by domain
-    let domain;
+    // Split by baseUrl
+    let baseUrl;
 
-    splitResult = uri.split(':');
+    splitResult = pathname.split(':');
 
-    domain = splitResult[0];
-    uri = splitResult.slice(1).join(':');
+    baseUrl = splitResult[0];
+    pathname = splitResult.slice(1).join(':');
 
     // Remove ".git" suffix
-    uri = uri.replace(GIT_SUFFIX_REG_EXP, '');
+    pathname = pathname.replace(GIT_SUFFIX_REG_EXP, '');
 
-    return new URL(`${protocol}://${domain}/${uri}`);
+    // Port
+    // TODO: Detect ports
+    const port = withPorts ? '' : '';
+
+    return new URL(`${protocol}//${baseUrl}${port}/${pathname}`);
+};
+
+export function normalizeRemoteUrl(
+    remoteUrl,
+    { withPort = false, withOrgProtocol = false } = {},
+) {
+    try {
+        const url = new URL(remoteUrl);
+
+        return normalizeValidRemoteUrl(url, { withPort, withOrgProtocol });
+    } catch (e) {
+        // Fallback to manual resolution of remote URL
+        return normalizeCustomRemoteUrl(remoteUrl, {
+            withPort,
+            withOrgProtocol,
+        });
+    }
 }

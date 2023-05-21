@@ -9,7 +9,7 @@ import {
     getRemoteForBranch,
     getRemoteUrl,
 } from './git.js';
-import { getBuildResultsForCommit } from './services/bitbucket-cloud-api.js';
+import { getBuildResultsForCommit } from './services/bitbucket-dc-api.js';
 
 try {
     const branchName = await getCurrentBranchName();
@@ -68,7 +68,9 @@ try {
     console.log('');
 } catch (error) {
     console.log(
-        `${chalk.bold('Ups. We have an error.')}\n\n${chalk.red(error.stack)}`,
+        `${chalk.bold('Ups. We have an error.')}\n\n${chalk.red(
+            error.message,
+        )}\n\n${chalk.red(error.stack)}`,
     );
     process.exit(1);
 }

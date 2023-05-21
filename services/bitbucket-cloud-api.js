@@ -1,4 +1,4 @@
-import './user-config.js';
+import '../user-config.js';
 
 import * as assert from 'assert';
 
@@ -40,12 +40,12 @@ const getAuthKey = () => {
     ).toString('base64');
 };
 
-export async function getBuildResultsForCommit(projectUrl, commitHash) {
+export async function getBuildResultsForCommit(remoteUrl, commitHash) {
     // /2.0/repositories/{workspace}/{repo_slug}/commit/{commit}/statuses
     // https://developer.atlassian.com/cloud/bitbucket/rest/api-group-commit-statuses/
 
-    const workspace = getWorkspaceFromUrl(projectUrl);
-    const repoSlug = getRepoSlugFromUrl(projectUrl);
+    const workspace = getWorkspaceFromUrl(remoteUrl);
+    const repoSlug = getRepoSlugFromUrl(remoteUrl);
 
     const url = `${baseUrl}/2.0/repositories/${workspace}/${repoSlug}/commit/${commitHash}/statuses`;
 

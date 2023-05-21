@@ -150,7 +150,7 @@ export async function getRemoteForBranch(branch) {
     return result.toString().trim();
 }
 
-export async function getGitUrl(remote) {
+export async function getRemoteUrl(remote) {
     const result = await $`git ls-remote --get-url "${remote}"`;
 
     return result.toString().trim();

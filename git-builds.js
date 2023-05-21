@@ -2,6 +2,7 @@
 
 import chalk from 'chalk';
 
+import { getBuildsProvider } from './builds-providers/builds-provider.js';
 import { normalizeRemoteUrl } from './git-utils.js';
 import {
     getCommitHashForCurrentBranch,
@@ -9,7 +10,6 @@ import {
     getRemoteForBranch,
     getRemoteUrl,
 } from './git.js';
-import { getBuildResultsForCommit } from './services/bitbucket-cloud-api.js';
 
 try {
     const branchName = await getCurrentBranchName();
@@ -20,19 +20,35 @@ try {
         throw new Error(`Git remote is not set for ${branchRemote}`);
     }
 
-    const normalizedRemoteUrl = normalizeRemoteUrl(remoteUrl);
     const commitHash = await getCommitHashForCurrentBranch();
 
-    // Fetch build results
-    const buildResults = await getBuildResultsForCommit(
-        normalizedRemoteUrl,
+    console.log(
+        `👀 Searching for builds for branch ${chalk.bold(
+            '%s',
+        )} with commit ${chalk.bold('%s')}...`,
+        branchName,
         commitHash,
     );
+
+    const normalizedRemoteUrl = normalizeRemoteUrl(remoteUrl);
+    const buildsProvider = await getBuildsProvider(normalizedRemoteUrl);
+
+    if (!buildsProvider || typeof buildsProvider !== 'function') {
+        throw new Error(
+            `Can't resolve a builds provider for ${remoteUrl.toString()} GIT remote`,
+        );
+    }
+
+    const buildResults = await buildsProvider({
+        commitHash,
+        branchName,
+        remoteUrl: normalizedRemoteUrl,
+    });
 
     if (!buildResults) {
         console.log(`
         ${chalk.bold(
-            `We haven't found any builds for the ${chalk.green(
+            `🤔 We haven't found any builds for the ${chalk.green(
                 commitHash,
             )} commit`,
         )}`);
@@ -41,12 +57,12 @@ try {
 
     console.log(
         buildResults.length > 1
-            ? `There are ${chalk.bold(
+            ? `🔎 There are ${chalk.bold(
                   buildResults.length,
-              )} builds for the ${chalk.bold.green(commitHash)} commit:`
-            : `There is ${chalk.bold(
+              )} builds for the ${chalk.green(commitHash)} commit:`
+            : `🔎 There is ${chalk.bold(
                   buildResults.length,
-              )} build for the ${chalk.bold.green(commitHash)} commit:`,
+              )} build for the ${chalk.green(commitHash)} commit:`,
     );
 
     for (let buildStatus of buildResults) {
@@ -68,7 +84,9 @@ try {
     console.log('');
 } catch (error) {
     console.log(
-        `${chalk.bold('Ups. We have an error.')}\n\n${chalk.red(error.stack)}`,
+        `${chalk.bold('Ups. We have an error.')}\n\n${chalk.red(
+            error.message,
+        )}\n\n${chalk.red(error.stack)}`,
     );
     process.exit(1);
 }

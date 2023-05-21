@@ -8,14 +8,17 @@
         "branch",
         "prune",
         "switch",
-        "checkout"
+        "checkout",
+        "builds",
+        "pipelines",
+        "bitbucket",
+        "atlassian"
     ],
     "type": "module",
     "bin": {
         "git-switch-branch": "git-switch-branch.js",
         "git-prune-branches": "git-prune-branches.js",
-        "git-pipelines": "git-pipelines.js",
-        "git-builds": "git-bitbucket-dc-builds.js"
+        "git-builds": "git-builds.js"
     },
     "repository": {
         "type": "git",

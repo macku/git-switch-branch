@@ -1,4 +1,4 @@
-import '../user-config.js';
+import '../services/user-config.js';
 
 import bitbucketPipelinesBuildsProvider from './bitbucket-cloud-pipelines.js';
 import bitbucketDcBuildsProvider from './bitbucket-dc-builds.js';

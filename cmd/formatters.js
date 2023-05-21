@@ -3,13 +3,13 @@ import chalk from 'chalk';
 import {
     getCommitDateAndAuthorCached,
     wasCommitMergedToDefaultBranchCached,
-} from './git-cached.js';
+} from '../git/git-cached.js';
 import {
     getCurrentBranchName,
     getDefaultBranchName,
     getDefaultRemoteBranchName,
     getDefaultRemoteBranchRef,
-} from './git.js';
+} from '../git/git.js';
 
 export async function formatCommit({
     commitHash,

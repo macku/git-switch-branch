@@ -1,5 +1,5 @@
+import { getRemoteRefs } from '../git/git.js';
 import { formatCommit } from './formatters.js';
-import { getRemoteRefs } from './git.js';
 
 export async function getRemoteBranches({ withMergedStatus = false } = {}) {
     const remoteRefs = await getRemoteRefs();

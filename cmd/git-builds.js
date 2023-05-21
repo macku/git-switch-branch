@@ -2,14 +2,14 @@
 
 import chalk from 'chalk';
 
-import { getBuildsProvider } from './builds-providers/builds-provider.js';
-import { normalizeRemoteUrl } from './git-utils.js';
+import { getBuildsProvider } from '../builds-providers/builds-provider.js';
+import { normalizeRemoteUrl } from '../git/git-utils.js';
 import {
     getCommitHashForCurrentBranch,
     getCurrentBranchName,
     getRemoteForBranch,
     getRemoteUrl,
-} from './git.js';
+} from '../git/git.js';
 
 try {
     const branchName = await getCurrentBranchName();

@@ -1,5 +1,5 @@
+import { getLocalRefs } from '../git/git.js';
 import { formatCommit } from './formatters.js';
-import { getLocalRefs } from './git.js';
 
 export async function getLocalBranches({ withMergedStatus = false } = {}) {
     const localRefs = await getLocalRefs();

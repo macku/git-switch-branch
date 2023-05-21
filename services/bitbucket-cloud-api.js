@@ -1,4 +1,4 @@
-import '../user-config.js';
+import './user-config.js';
 
 import * as assert from 'assert';
 

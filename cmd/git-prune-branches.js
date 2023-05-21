@@ -8,7 +8,7 @@ import {
     deleteBranch,
     getCurrentBranchName,
     getDefaultBranchName,
-} from './git.js';
+} from '../git/git.js';
 import { getLocalBranches } from './local-branches.js';
 
 $.verbose = false;

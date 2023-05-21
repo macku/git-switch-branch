@@ -35,7 +35,7 @@ try {
 
     if (!buildsProvider || typeof buildsProvider !== 'function') {
         throw new Error(
-            `Can't resolve a builds provider for ${remoteUrl.toString()} GIT remote`,
+            `Can't find or resolve builds provider for ${remoteUrl.toString()} GIT remote`,
         );
     }
 

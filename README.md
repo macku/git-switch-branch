@@ -35,18 +35,28 @@ touch ~/.atl-config
     Example content:
 
     ```env
-    # If the projects you are working on are not hosted on Bitbucket Cloud, skip this part
+    # Bitbucket Cloud setup
+    # If the projects you are working is using Bitbucket Cloud use this part
     # 1. Create a new app password with the READ permissions to the repository and pipelines https://bitbucket.org/account/settings/app-passwords/
     BITBUCKET_CLOUD_TOKEN=<<APP-PASSWORD>>
     # 2. Bitbucket username that can be found on https://bitbucket.org/account/settings/
     BITBUCKET_CLOUD_USERNAME=maciej-adamczak
 
-    # If the projects you are working on are not hosted on Bitbucket DC, skip this part
+    # Bitbucket Data Center setup
+    # If the projects you are working is using Bitbucket Data Center use this part
     # 3. Base URL to Bitbucket DC instance
     BITBUCKET_DC_URL=https://my-bitbucket.instance.com
     # 4. HTTP Access Token with the READ permissions.
     # You can generate the token from your account profile: Manage account -> HTTP access token -> Create token
     BITBUCKET_DC_TOKEN=<<HTTP-ACCESS-TOKEN>>
+
+    # GitLab setup
+    # If the projects you are working is using GitLab use this part
+    # 5. GitLab Personal Access Token with the API permissions.
+    # You can generate the token from your account profile: Profile Preferences -> Access Tokens -> Add new token
+    # Select the "read_api" scope
+    # https://docs.gitlab.com/ee/user/group/settings/group_access_tokens.html
+    GITLAB_TOKEN=<<PERSONAL-ACCESS-TOKEN>>
     ```
 
 > Why do you need to generate and save access tokens?

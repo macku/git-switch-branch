@@ -11,6 +11,22 @@ import {
     getRemoteUrl,
 } from '../git/git.js';
 
+/**
+ * @typedef {Array<BuildStatus>} BuildsResults
+ * @property {string} [pipelineUrl]
+ */
+
+/**
+ * @typedef {Object} BuildStatus
+ * @property {string} name
+ * @property {BuildState} state
+ * @property {string} url
+ */
+
+/**
+ * @typedef {('SUCCESSFUL'|'FAILED'|'INPROGRESS'|'UNKNOWN'|'SKIPPED'|'CANCELLED'|'PENDING')} BuildState
+ */
+
 try {
     const branchName = await getCurrentBranchName();
     const branchRemote = await getRemoteForBranch(branchName);
@@ -23,11 +39,9 @@ try {
     const commitHash = await getCommitHashForCurrentBranch();
 
     console.log(
-        `👀 Searching for builds for branch ${chalk.bold(
-            '%s'
-        )} with commit ${chalk.bold('%s')}...`,
-        branchName,
-        commitHash
+        `👀 Searching for builds for branch %s with commit %s...`,
+        chalk.bold(branchName),
+        chalk.bold(commitHash)
     );
 
     const normalizedRemoteUrl = normalizeRemoteUrl(remoteUrl);
@@ -39,11 +53,13 @@ try {
         );
     }
 
-    const buildResults = await buildsProvider({
-        commitHash,
-        branchName,
-        remoteUrl: normalizedRemoteUrl,
-    });
+    const buildResults = /** @type {BuildsResults} */ (
+        await buildsProvider({
+            commitHash,
+            branchName,
+            remoteUrl: normalizedRemoteUrl,
+        })
+    );
 
     if (!buildResults) {
         console.log(`
@@ -65,6 +81,14 @@ try {
               )} build for the ${chalk.green(commitHash)} commit:`
     );
 
+    // TODO: Group job IDs by pipeline ID
+
+    // TODO: Show overall pipeline status
+    if (buildResults.pipelineUrl) {
+        console.log();
+        console.log(`   Pipeline: ${buildResults.pipelineUrl}`);
+    }
+
     for (let buildStatus of buildResults) {
         console.log('');
         console.log(
@@ -75,6 +99,12 @@ try {
                     ? chalk.bold.red('❌ Failed')
                     : buildStatus.state === 'INPROGRESS'
                     ? chalk.bold.blue('🕑 In progress')
+                    : buildStatus.state === 'PENDING'
+                    ? chalk.bold.yellow('⏳ Pending')
+                    : buildStatus.state === 'SKIPPED'
+                    ? chalk.bold.yellow('⏭️ Skipped')
+                    : buildStatus.state === 'CANCELLED'
+                    ? chalk.bold.grey('❌ Cancelled')
                     : chalk.bold.grey('❔ Unknown')
             } - ${chalk.bold(buildStatus.name)}`
         );

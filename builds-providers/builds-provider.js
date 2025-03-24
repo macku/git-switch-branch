@@ -2,6 +2,7 @@ import '../services/user-config.js';
 
 import bitbucketPipelinesBuildsProvider from './bitbucket-cloud-pipelines.js';
 import bitbucketDcBuildsProvider from './bitbucket-dc-builds.js';
+import gitlabComBuildsProvider from './gitlab-com-pipelines.js';
 
 async function isBitbucketDc(remoteUrl) {
     // TODO: Find a better way to check if it's Bitbucket DC
@@ -20,6 +21,14 @@ async function isBitbucketCloud(remoteUrl) {
     return false;
 }
 
+async function isGitlabCom(remoteUrl) {
+    if (remoteUrl.hostname.startsWith('gitlab.com')) {
+        return true;
+    }
+
+    return false;
+}
+
 export async function getBuildsProvider(remoteUrl) {
     switch (true) {
         case await isBitbucketCloud(remoteUrl):
@@ -27,6 +36,9 @@ export async function getBuildsProvider(remoteUrl) {
 
         case await isBitbucketDc(remoteUrl):
             return bitbucketDcBuildsProvider;
+
+        case await isGitlabCom(remoteUrl):
+            return gitlabComBuildsProvider;
 
         default:
             throw new Error(

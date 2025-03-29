@@ -51,7 +51,7 @@ const normalizeCustomRemoteUrl = (
 
     splitResult = pathname.split(':');
 
-    baseUrl = splitResult[0];
+    baseUrl = splitResult[0]!;
     pathname = splitResult.slice(1).join(':');
 
     // Remove ".git" suffix

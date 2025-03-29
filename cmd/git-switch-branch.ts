@@ -1,17 +1,22 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --experimental-strip-types
 
 import chalk from 'chalk';
 import { ExitPromptError } from '@inquirer/core';
 import { search, Separator } from '@inquirer/prompts';
 import { $ } from 'zx';
 
-import { getLocalBranches } from './local-branches.js';
-import { getRemoteBranches } from './remote-branches.js';
-import { configureInquirer } from '../helpers/inquirer-helper.js';
+import { getLocalBranches } from './switch-branch/local-branches.ts';
+import { getRemoteBranches } from './switch-branch/remote-branches.ts';
+import { configureInquirer } from '../helpers/inquirer-helper.ts';
 
 $.verbose = false;
 
 configureInquirer();
+
+interface Choice {
+    name: string;
+    value: string | Symbol;
+}
 
 try {
     const remoteOption = {
@@ -36,7 +41,7 @@ try {
         source: (term) => {
             term = term || '';
 
-            const filteredOptions = [];
+            const filteredOptions: Array<Choice | Separator> = [];
 
             if (term === '') {
                 filteredOptions.push(remoteOption);
@@ -105,7 +110,7 @@ try {
     console.log(
         `${chalk.bold(
             'Ups. Cannot switch to a branch due to an error:'
-        )}\n\n${chalk.red(error.stack)}`
+        )}\n\n${chalk.red((error as Error).stack)}`
     );
 
     process.exit(1);

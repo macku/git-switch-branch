@@ -87,7 +87,9 @@ export async function getLocalRefs(): Promise<GitRef[]> {
         }
         const [, commitHash, ref] = match;
 
-        return { commitHash, ref };
+        const gitRef: GitRef = { commitHash: commitHash!, ref: ref! };
+
+        return gitRef;
     });
 }
 
@@ -118,7 +120,9 @@ export async function getRemoteRefs(): Promise<GitRef[]> {
                 }
                 const [, commitHash, ref] = match;
 
-                return { commitHash, ref };
+                const gitRef: GitRef = { commitHash: commitHash!, ref: ref! };
+
+                return gitRef;
             })
             // Remove the HEAD
             .filter(({ ref }) => ref !== `${remoteName}/HEAD`)
@@ -156,7 +160,7 @@ export async function wasCommitMergedToDefaultBranch(
     return defaultBranchIncludesLastCommitResult || commitWasSquashMerged;
 }
 
-interface CommitInfo {
+export interface CommitInfo {
     commitDate: string;
     commitAuthor: string;
 }
@@ -168,7 +172,12 @@ export async function getCommitDateAndAuthor(
 
     const [commitDate, commitAuthor] = result.toString().trim().split('\t');
 
-    return { commitDate, commitAuthor };
+    const commitInfo: CommitInfo = {
+        commitDate: commitDate!,
+        commitAuthor: commitAuthor!,
+    };
+
+    return commitInfo;
 }
 
 export async function getCommitHashForCurrentBranch(): Promise<string> {

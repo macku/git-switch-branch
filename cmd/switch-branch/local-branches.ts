@@ -1,7 +1,10 @@
-import { getLocalRefs } from '../git/git.js';
-import { formatCommit } from './formatters.js';
+import { getLocalRefs } from '../../git/git.ts';
+import { formatCommit } from './formatters.ts';
+import type { GetBranchesFn } from './types.ts';
 
-export async function getLocalBranches({ withMergedStatus = false } = {}) {
+export const getLocalBranches: GetBranchesFn = async function getLocalBranches({
+    withMergedStatus = false,
+} = {}) {
     const localRefs = await getLocalRefs();
 
     const localBranchesPromises = localRefs.map(({ commitHash, ref }) =>
@@ -16,4 +19,4 @@ export async function getLocalBranches({ withMergedStatus = false } = {}) {
     );
 
     return await Promise.all(localBranchesPromises);
-}
+};

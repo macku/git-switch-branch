@@ -3,20 +3,27 @@ import chalk from 'chalk';
 import {
     getCommitDateAndAuthorCached,
     wasCommitMergedToDefaultBranchCached,
-} from '../git/git-cached.js';
+} from '../../git/git-cached.ts';
 import {
     getCurrentBranchName,
     getDefaultBranchName,
     getDefaultRemoteBranchName,
     getDefaultRemoteBranchRef,
-} from '../git/git.js';
+} from '../../git/git.ts';
+
+interface FormatCommitOptions {
+    commitHash: string;
+    ref: string;
+    withHash?: boolean;
+    withMergedStatus?: boolean;
+}
 
 export async function formatCommit({
     commitHash,
     ref,
     withHash = true,
     withMergedStatus = false,
-}) {
+}: FormatCommitOptions): Promise<string> {
     const { commitDate, commitAuthor } =
         await getCommitDateAndAuthorCached(commitHash);
 

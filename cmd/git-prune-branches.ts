@@ -1,21 +1,27 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --experimental-strip-types
 
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { $ } from 'zx';
+import { ExitPromptError } from '@inquirer/core';
 
 import {
     deleteBranch,
     getCurrentBranchName,
     getDefaultBranchName,
-} from '../git/git.js';
-import { getLocalBranches } from './local-branches.js';
-import { configureInquirer } from '../helpers/inquirer-helper.js';
-import { ExitPromptError } from '@inquirer/core';
+} from '../git/git.ts';
+import { getLocalBranches } from './switch-branch/local-branches.ts';
+import { configureInquirer } from '../helpers/inquirer-helper.ts';
 
 $.verbose = false;
 
 configureInquirer();
+
+interface BranchOption {
+    name: string;
+    value: string;
+    disabled?: boolean;
+}
 
 try {
     console.log(
@@ -37,15 +43,14 @@ try {
         )} local GIT branches.`
     );
 
-    let { branches } = await inquirer.prompt({
+    const { branches } = await inquirer.prompt<{ branches: string[] }>({
         type: 'checkbox',
         name: 'branches',
         message: 'Select local GIT branches to delete',
-        emptyText: "Can't find any local GIT branches...",
         pageSize: 15,
         choices: () =>
             // TODO: Maybe consider removing the current and default branches from the list?
-            localBranches.map((option) => {
+            localBranches.map((option: BranchOption) => {
                 if (
                     option.value === defaultBranchName ||
                     option.value === currentBranchName
@@ -71,7 +76,7 @@ try {
         )}\n${chalk.green(branches.join('\n'))}`
     );
 
-    let { answer } = await inquirer.prompt({
+    const { answer } = await inquirer.prompt<{ answer: boolean }>({
         type: 'confirm',
         name: 'answer',
         default: false,
@@ -104,7 +109,7 @@ try {
     console.log(
         `${chalk.bold(
             'Ups. Cannot prune branches due to an error:'
-        )}\n\n${chalk.red(error.stack)}`
+        )}\n\n${chalk.red((error as Error).stack)}`
     );
     process.exit(1);
 }

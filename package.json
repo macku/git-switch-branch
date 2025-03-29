@@ -16,9 +16,9 @@
     ],
     "type": "module",
     "bin": {
-        "git-switch-branch": "cmd/git-switch-branch.js",
-        "git-prune-branches": "cmd/git-prune-branches.js",
-        "git-builds": "cmd/git-builds.js"
+        "git-switch-branch": "cli/git-switch-branch.ts",
+        "git-prune-branches": "cli/git-prune-branches.ts",
+        "git-builds": "cli/git-builds.ts"
     },
     "repository": {
         "type": "git",

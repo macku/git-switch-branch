@@ -1,5 +1,3 @@
-#!/usr/bin/env node --experimental-strip-types
-
 import chalk from 'chalk';
 import { ExitPromptError } from '@inquirer/core';
 import { search, Separator } from '@inquirer/prompts';

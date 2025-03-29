@@ -1,5 +1,3 @@
-#!/usr/bin/env node --experimental-strip-types
-
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { $ } from 'zx';

@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 
 import chalk from 'chalk';
-import inquirer from 'inquirer';
-import inquirerPrompt from 'inquirer-autocomplete-prompt';
+import { ExitPromptError } from '@inquirer/core';
+import { search, Separator } from '@inquirer/prompts';
 import { $ } from 'zx';
 
 import { getLocalBranches } from './local-branches.js';
 import { getRemoteBranches } from './remote-branches.js';
-
-inquirer.registerPrompt('autocomplete', inquirerPrompt);
+import { configureInquirer } from '../helpers/inquirer-helper.js';
 
 $.verbose = false;
+
+configureInquirer();
 
 try {
     const remoteOption = {
@@ -28,24 +29,23 @@ try {
         )} local GIT branches.`
     );
 
-    let { branch } = await inquirer.prompt({
-        type: 'autocomplete',
-        name: 'branch',
+    let branch = await search({
         message: 'Type or select a recent local branch from the list',
-        emptyText: "Can't find any local GIT branches...",
+        // emptyText: "Can't find any local GIT branches...",
         pageSize: 15,
-        source: (answers, input) => {
-            input = input || '';
+        source: (term) => {
+            term = term || '';
 
             const filteredOptions = [];
 
-            if (input === '') {
+            if (term === '') {
                 filteredOptions.push(remoteOption);
+                filteredOptions.push(new Separator());
             }
 
             filteredOptions.push(
                 ...localBranches.filter(({ value }) =>
-                    value.match(new RegExp(input, 'i'))
+                    value.match(new RegExp(term, 'i'))
                 )
             );
 
@@ -69,22 +69,20 @@ try {
             )} local and remote GIT branches.`
         );
 
-        ({ branch } = await inquirer.prompt({
-            type: 'autocomplete',
-            name: 'branch',
+        branch = await search({
             message: 'Type or select a recent remote branch from the list',
-            emptyText: "Can't find a remote GIT branch...",
+            // emptyText: "Can't find a remote GIT branch...",
             pageSize: 15,
-            source: (answers, input) => {
-                input = input || '';
+            source: (term) => {
+                term = term || '';
 
                 const filteredOptions = remoteBranches.filter(({ value }) =>
-                    value.match(new RegExp(input, 'i'))
+                    value.match(new RegExp(term, 'i'))
                 );
 
                 return Promise.resolve(filteredOptions);
             },
-        }));
+        });
     }
 
     if (!branch) {
@@ -99,6 +97,11 @@ try {
         `✅ ${chalk.bold('Branch switched to:')} ${chalk.green(branch)}`
     );
 } catch (error) {
+    if (error instanceof ExitPromptError) {
+        // Exit gracefully
+        process.exit();
+    }
+
     console.log(
         `${chalk.bold(
             'Ups. Cannot switch to a branch due to an error:'

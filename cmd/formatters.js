@@ -17,9 +17,8 @@ export async function formatCommit({
     withHash = true,
     withMergedStatus = false,
 }) {
-    const { commitDate, commitAuthor } = await getCommitDateAndAuthorCached(
-        commitHash
-    );
+    const { commitDate, commitAuthor } =
+        await getCommitDateAndAuthorCached(commitHash);
 
     let formattedMergedStatus = '';
     let formattedHash = '';

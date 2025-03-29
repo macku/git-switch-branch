@@ -10,8 +10,12 @@ import {
     getDefaultBranchName,
 } from '../git/git.js';
 import { getLocalBranches } from './local-branches.js';
+import { configureInquirer } from '../helpers/inquirer-helper.js';
+import { ExitPromptError } from '@inquirer/core';
 
 $.verbose = false;
+
+configureInquirer();
 
 try {
     console.log(
@@ -92,6 +96,11 @@ try {
         )
     );
 } catch (error) {
+    if (error instanceof ExitPromptError) {
+        // Exit gracefully
+        process.exit();
+    }
+
     console.log(
         `${chalk.bold(
             'Ups. Cannot prune branches due to an error:'

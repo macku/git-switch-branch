@@ -1,7 +1,6 @@
-import chalk from 'chalk';
 import { ExitPromptError } from '@inquirer/core';
 import { search, Separator } from '@inquirer/prompts';
-import { $ } from 'zx';
+import { $, chalk } from 'zx';
 
 import { getLocalBranches } from './switch-branch/local-branches.ts';
 import { getRemoteBranches } from './switch-branch/remote-branches.ts';

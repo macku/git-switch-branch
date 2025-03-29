@@ -1,6 +1,6 @@
 #!/usr/bin/env node --experimental-strip-types
 
-import chalk from 'chalk';
+import { chalk } from 'zx';
 
 import { getBuildsProvider } from '../builds-providers/builds-provider.ts';
 import { normalizeRemoteUrl } from '../git/git-utils.ts';

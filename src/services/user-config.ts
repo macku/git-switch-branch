@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import * as path from 'node:path';
-import * as dotenv from 'dotenv';
+import { dotenv } from 'zx';
 
 assert(
     process.env.HOME,
@@ -11,4 +11,4 @@ const userHomeDir = process.env.HOME;
 
 const configPath = path.join(userHomeDir, '.atl-config');
 
-dotenv.config({ path: configPath });
+dotenv.config(configPath);

@@ -1,6 +1,5 @@
-import chalk from 'chalk';
 import inquirer from 'inquirer';
-import { $ } from 'zx';
+import { $, chalk } from 'zx';
 import { ExitPromptError } from '@inquirer/core';
 
 import {

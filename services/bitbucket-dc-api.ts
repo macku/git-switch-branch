@@ -1,6 +1,6 @@
 import * as assert from 'node:assert';
 import { fetch } from 'zx';
-import type { BuildsResults } from '../builds-providers/types';
+import type { BuildsResults } from '../builds-providers/types.ts';
 import './user-config.ts';
 
 const getProjectFromUrl = (url: URL): string => {
@@ -9,7 +9,7 @@ const getProjectFromUrl = (url: URL): string => {
         .replace(/\/+$/, '')
         .split('/');
 
-    return parts[0];
+    return parts[0]!;
 };
 
 const getRepoSlugFromUrl = (url: URL): string => {
@@ -18,7 +18,7 @@ const getRepoSlugFromUrl = (url: URL): string => {
         .replace(/\/+$/, '')
         .split('/');
 
-    return parts[1];
+    return parts[1]!;
 };
 
 const getBaseUrl = (): string => {

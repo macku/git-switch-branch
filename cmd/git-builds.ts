@@ -1,16 +1,16 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --experimental-strip-types
 
 import chalk from 'chalk';
 
-import { getBuildsProvider } from '../builds-providers/builds-provider.js';
-import { normalizeRemoteUrl } from '../git/git-utils.js';
+import { getBuildsProvider } from '../builds-providers/builds-provider.ts';
+import { normalizeRemoteUrl } from '../git/git-utils.ts';
 import {
     getCommitHashForCurrentBranch,
     getCurrentBranchName,
     getRemoteForBranch,
     getRemoteUrl,
-} from '../git/git.js';
-import type { BuildsResults } from '../builds-providers/types';
+} from '../git/git.ts';
+import type { BuildsResults } from '../builds-providers/types.ts';
 
 try {
     const branchName: string = await getCurrentBranchName();

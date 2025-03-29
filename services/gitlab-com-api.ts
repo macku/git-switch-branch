@@ -1,7 +1,7 @@
 import * as assert from 'node:assert';
 import { fetch } from 'zx';
-import type { BuildState, BuildsResults } from '../builds-providers/types';
-import './user-config.js';
+import type { BuildState, BuildsResults } from '../builds-providers/types.ts';
+import './user-config.ts';
 
 interface GitlabPipelineStatus {
     id: string;

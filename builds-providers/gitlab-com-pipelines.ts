@@ -1,5 +1,5 @@
 import { getBuildResultsForCommit } from '../services/gitlab-com-api.ts';
-import type { BuildsProvider } from './types';
+import type { BuildsProvider } from './types.ts';
 
 const gitlabBuildsProvider: BuildsProvider = async function buildsProvider({
     commitHash,

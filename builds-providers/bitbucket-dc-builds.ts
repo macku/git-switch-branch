@@ -1,5 +1,5 @@
-import { getBuildResultsForCommit } from '../services/bitbucket-dc-api.js';
-import type { BuildsProvider } from './types';
+import { getBuildResultsForCommit } from '../services/bitbucket-dc-api.ts';
+import type { BuildsProvider } from './types.ts';
 
 const bitbucketDcBuildsProvider: BuildsProvider =
     async function buildsProvider({ commitHash, remoteUrl }) {

@@ -9,16 +9,16 @@
         "moduleDetection": "force",
         "isolatedModules": true,
         "verbatimModuleSyntax": true,
-
+        /* Strictness */
         "strict": true,
         "noUncheckedIndexedAccess": true,
         "noImplicitOverride": true,
-
-        "module": "preserve",
+        /* Node Stuff */
+        "allowImportingTsExtensions": true,
+        "rewriteRelativeImportExtensions": true,
+        "module": "NodeNext",
         "noEmit": true,
-
-        "lib": ["es2022"],
-
-        "allowImportingTsExtensions": true
+        /* If your code doesn't run in the DOM: */
+        "lib": ["es2022"]
     }
 }

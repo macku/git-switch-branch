@@ -1,9 +1,9 @@
 import bitbucketPipelinesBuildsProvider from './bitbucket-cloud-pipelines.ts';
 import bitbucketDcBuildsProvider from './bitbucket-dc-builds.ts';
 import gitlabComBuildsProvider from './gitlab-com-pipelines.ts';
-import type { BuildsProvider } from './types';
+import type { BuildsProvider } from './types.ts';
 
-import '../services/user-config';
+import '../services/user-config.ts';
 
 async function isBitbucketDc(remoteUrl: URL): Promise<boolean> {
     // TODO: Find a better way to check if it's Bitbucket DC

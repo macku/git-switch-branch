@@ -55,7 +55,7 @@
         "prepare": "husky install"
     },
     "engines": {
-        "node": ">=22"
+        "node": ">=22.6.0"
     },
     "importSort": {
         ".js, .jsx, .ts, .tsx": {

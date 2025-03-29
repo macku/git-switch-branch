@@ -1,6 +1,6 @@
 import * as assert from 'node:assert';
 import { fetch } from 'zx';
-import type { BuildsResults } from '../builds-providers/types';
+import type { BuildsResults } from '../builds-providers/types.ts';
 import './user-config.ts';
 
 const baseUrl = `https://api.bitbucket.org`;

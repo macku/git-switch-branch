@@ -54,7 +54,9 @@
     },
     "scripts": {
         "prepare": "husky install",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "code-style": "npm run prettier-check",
+        "prettier-check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\""
     },
     "engines": {
         "node": ">=22.6.0"

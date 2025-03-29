@@ -10,7 +10,7 @@ import {
     getRemoteForBranch,
     getRemoteUrl,
 } from '../git/git.js';
-import type { BuildsResults } from '../builds-providers/type.js';
+import type { BuildsResults } from '../builds-providers/types';
 
 try {
     const branchName: string = await getCurrentBranchName();
@@ -29,7 +29,7 @@ try {
         chalk.bold(commitHash)
     );
 
-    const normalizedRemoteUrl: string = normalizeRemoteUrl(remoteUrl);
+    const normalizedRemoteUrl: URL = normalizeRemoteUrl(remoteUrl);
     const buildsProvider = await getBuildsProvider(normalizedRemoteUrl);
 
     if (!buildsProvider || typeof buildsProvider !== 'function') {
@@ -95,7 +95,9 @@ try {
     }
 
     console.log('');
-} catch (error) {
+} catch (err) {
+    const error = err as Error;
+
     console.log(
         `${chalk.bold('Ups. We have an error.')}\n\n${chalk.red(error.stack)}`
     );

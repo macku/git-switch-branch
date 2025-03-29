@@ -1,30 +1,29 @@
-import './user-config.js';
-
-import * as assert from 'assert';
-
+import * as assert from 'node:assert';
 import { fetch } from 'zx';
+import type { BuildsResults } from '../builds-providers/types';
+import './user-config.ts';
 
 const baseUrl = `https://api.bitbucket.org`;
 
-const getWorkspaceFromUrl = (url) => {
+const getWorkspaceFromUrl = (url: URL): string => {
     const parts = url.pathname
         .replace(/^\/+/, '')
         .replace(/\/+$/, '')
         .split('/');
 
-    return parts[0];
+    return parts[0]!;
 };
 
-const getRepoSlugFromUrl = (url) => {
+const getRepoSlugFromUrl = (url: URL): string => {
     const parts = url.pathname
         .replace(/^\/+/, '')
         .replace(/\/+$/, '')
         .split('/');
 
-    return parts[1];
+    return parts[1]!;
 };
 
-const getAuthKey = () => {
+const getAuthKey = (): string => {
     assert.ok(
         process.env.BITBUCKET_CLOUD_USERNAME,
         'The "BITBUCKET_CLOUD_USERNAME" value is missing. You need to create the ~/.atl-config file and provide a valid user name'
@@ -40,7 +39,10 @@ const getAuthKey = () => {
     ).toString('base64');
 };
 
-export async function getBuildResultsForCommit(remoteUrl, commitHash) {
+export async function getBuildResultsForCommit(
+    remoteUrl: URL,
+    commitHash: string
+): Promise<BuildsResults> {
     // /2.0/repositories/{workspace}/{repo_slug}/commit/{commit}/statuses
     // https://developer.atlassian.com/cloud/bitbucket/rest/api-group-commit-statuses/
 

@@ -1,10 +1,9 @@
-import './user-config.js';
-
-import * as assert from 'assert';
-
+import * as assert from 'node:assert';
 import { fetch } from 'zx';
+import type { BuildsResults } from '../builds-providers/types';
+import './user-config.ts';
 
-const getProjectFromUrl = (url) => {
+const getProjectFromUrl = (url: URL): string => {
     const parts = url.pathname
         .replace(/^\/+/, '')
         .replace(/\/+$/, '')
@@ -13,7 +12,7 @@ const getProjectFromUrl = (url) => {
     return parts[0];
 };
 
-const getRepoSlugFromUrl = (url) => {
+const getRepoSlugFromUrl = (url: URL): string => {
     const parts = url.pathname
         .replace(/^\/+/, '')
         .replace(/\/+$/, '')
@@ -22,25 +21,28 @@ const getRepoSlugFromUrl = (url) => {
     return parts[1];
 };
 
-const getBaseUrl = () => {
+const getBaseUrl = (): string => {
     assert.ok(
         process.env.BITBUCKET_DC_URL,
         'The "BITBUCKET_DC_URL" value is missing. You need to create the ~/.atl-config file and provide a valid Bitbucket DC URL'
     );
 
-    return process.env.BITBUCKET_DC_URL;
+    return process.env.BITBUCKET_DC_URL as string;
 };
 
-const getAuthKey = () => {
+const getAuthKey = (): string => {
     assert.ok(
         process.env.BITBUCKET_DC_TOKEN,
         'The "BITBUCKET_DC_TOKEN" value is missing. You need to create the ~/.atl-config file and provide a valid token'
     );
 
-    return process.env.BITBUCKET_DC_TOKEN;
+    return process.env.BITBUCKET_DC_TOKEN as string;
 };
 
-export async function getBuildResultsForCommit(remoteUrl, commitHash) {
+export async function getBuildResultsForCommit(
+    remoteUrl: URL,
+    commitHash: string
+): Promise<BuildsResults> {
     const project = getProjectFromUrl(remoteUrl);
     const repoSlug = getRepoSlugFromUrl(remoteUrl);
 

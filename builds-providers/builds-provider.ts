@@ -1,17 +1,11 @@
-import '../services/user-config.js';
+import bitbucketPipelinesBuildsProvider from './bitbucket-cloud-pipelines.ts';
+import bitbucketDcBuildsProvider from './bitbucket-dc-builds.ts';
+import gitlabComBuildsProvider from './gitlab-com-pipelines.ts';
+import type { BuildsProvider } from './types';
 
-import bitbucketPipelinesBuildsProvider from './bitbucket-cloud-pipelines.js';
-import bitbucketDcBuildsProvider from './bitbucket-dc-builds.js';
-import gitlabComBuildsProvider from './gitlab-com-pipelines.js';
-import type { BuildsProvider } from './type';
+import '../services/user-config';
 
-interface RemoteUrl {
-    origin: string;
-    hostname: string;
-    pathname: string;
-}
-
-async function isBitbucketDc(remoteUrl: RemoteUrl): Promise<boolean> {
+async function isBitbucketDc(remoteUrl: URL): Promise<boolean> {
     // TODO: Find a better way to check if it's Bitbucket DC
     if (remoteUrl.origin === process.env.BITBUCKET_DC_URL) {
         return true;
@@ -20,7 +14,7 @@ async function isBitbucketDc(remoteUrl: RemoteUrl): Promise<boolean> {
     return false;
 }
 
-async function isBitbucketCloud(remoteUrl: RemoteUrl): Promise<boolean> {
+async function isBitbucketCloud(remoteUrl: URL): Promise<boolean> {
     if (remoteUrl.hostname === 'bitbucket.org') {
         return true;
     }
@@ -28,7 +22,7 @@ async function isBitbucketCloud(remoteUrl: RemoteUrl): Promise<boolean> {
     return false;
 }
 
-async function isGitlabCom(remoteUrl: RemoteUrl): Promise<boolean> {
+async function isGitlabCom(remoteUrl: URL): Promise<boolean> {
     if (remoteUrl.hostname.startsWith('gitlab.com')) {
         return true;
     }
@@ -37,7 +31,7 @@ async function isGitlabCom(remoteUrl: RemoteUrl): Promise<boolean> {
 }
 
 export async function getBuildsProvider(
-    remoteUrl: RemoteUrl
+    remoteUrl: URL
 ): Promise<BuildsProvider> {
     switch (true) {
         case await isBitbucketCloud(remoteUrl):

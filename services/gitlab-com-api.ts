@@ -1,13 +1,19 @@
+import * as assert from 'node:assert';
+import { fetch } from 'zx';
+import type { BuildState, BuildsResults } from '../builds-providers/types';
 import './user-config.js';
 
-import * as assert from 'assert';
-
-import { fetch } from 'zx';
+interface GitlabPipelineStatus {
+    id: string;
+    name: string;
+    status: string;
+    pipeline_id: string;
+}
 
 const gitlabWebUrl = `https://gitlab.com/`;
 const baseUrl = `https://gitlab.com/api/v4`;
 
-const getProjectIdFromUrl = (url) => {
+const getProjectIdFromUrl = (url: URL): string => {
     const parts = url.pathname
         .replace(/^\/+/, '')
         .replace(/\/+$/, '')
@@ -16,7 +22,7 @@ const getProjectIdFromUrl = (url) => {
     return encodeURIComponent(parts.join('/'));
 };
 
-const getProjectAndRepoFromUrl = (url) => {
+const getProjectAndRepoFromUrl = (url: URL): string => {
     const parts = url.pathname
         .replace(/^\/+/, '')
         .replace(/\/+$/, '')
@@ -25,19 +31,19 @@ const getProjectAndRepoFromUrl = (url) => {
     return parts.slice(0, 2).join('/');
 };
 
-const getPipelineJobUrl = (remoteUrl, jobId) => {
+const getPipelineJobUrl = (remoteUrl: URL, jobId: string): string => {
     const projectAndRepoParts = getProjectAndRepoFromUrl(remoteUrl);
 
     return `${gitlabWebUrl}/${projectAndRepoParts}/-/jobs/${jobId}`;
 };
 
-const getPipelineUrl = (remoteUrl, pipelineId) => {
+const getPipelineUrl = (remoteUrl: URL, pipelineId: string): string => {
     const projectAndRepoParts = getProjectAndRepoFromUrl(remoteUrl);
 
     return `${gitlabWebUrl}/${projectAndRepoParts}/-/pipelines/${pipelineId}`;
 };
 
-const getAuthKey = () => {
+const getAuthKey = (): string => {
     assert.ok(
         process.env.GITLAB_TOKEN,
         'The "GITLAB_TOKEN" value is missing. You need to create the ~/.atl-config file and provide a valid token'
@@ -47,10 +53,9 @@ const getAuthKey = () => {
 };
 
 /**
- * @param state
- * @return {BuildState}
+ * Maps GitLab pipeline status to our BuildState format
  */
-const mapGitlabPipelineBuildState = (state) => {
+const mapGitlabPipelineBuildState = (state: string): BuildState => {
     switch (state) {
         case 'success':
             return 'SUCCESSFUL';
@@ -71,11 +76,12 @@ const mapGitlabPipelineBuildState = (state) => {
 };
 
 /**
- * @param {string} commitHash
- * @param {string} remoteUrl
- * @return {Promise<BuildsResults>}
+ * Fetches build results for a specific commit from GitLab
  */
-export async function getBuildResultsForCommit(remoteUrl, commitHash) {
+export async function getBuildResultsForCommit(
+    remoteUrl: URL,
+    commitHash: string
+): Promise<BuildsResults> {
     const projectId = getProjectIdFromUrl(remoteUrl);
 
     const url = `${baseUrl}/projects/${projectId}/repository/commits/${commitHash}/statuses`;
@@ -93,10 +99,9 @@ export async function getBuildResultsForCommit(remoteUrl, commitHash) {
         );
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as GitlabPipelineStatus[];
 
-    /** @type {BuildStatus[]} */
-    const result = [];
+    const result = [] as BuildsResults;
 
     // Map the response to the expected format
     for (const item of data) {
@@ -110,7 +115,7 @@ export async function getBuildResultsForCommit(remoteUrl, commitHash) {
 
     // TODO: this is a temporary solution to get the pipeline URL
     if (data.length > 0) {
-        result.pipelineUrl = getPipelineUrl(remoteUrl, data[0].pipeline_id);
+        result.pipelineUrl = getPipelineUrl(remoteUrl, data[0]!.pipeline_id);
     }
 
     return result;

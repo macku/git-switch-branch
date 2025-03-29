@@ -10,33 +10,18 @@ import {
     getRemoteForBranch,
     getRemoteUrl,
 } from '../git/git.js';
-
-/**
- * @typedef {Array<BuildStatus>} BuildsResults
- * @property {string} [pipelineUrl]
- */
-
-/**
- * @typedef {Object} BuildStatus
- * @property {string} name
- * @property {BuildState} state
- * @property {string} url
- */
-
-/**
- * @typedef {('SUCCESSFUL'|'FAILED'|'INPROGRESS'|'UNKNOWN'|'SKIPPED'|'CANCELLED'|'PENDING')} BuildState
- */
+import type { BuildsResults } from '../builds-providers/type.js';
 
 try {
-    const branchName = await getCurrentBranchName();
-    const branchRemote = await getRemoteForBranch(branchName);
-    const remoteUrl = await getRemoteUrl(branchRemote);
+    const branchName: string = await getCurrentBranchName();
+    const branchRemote: string = await getRemoteForBranch(branchName);
+    const remoteUrl: string = await getRemoteUrl(branchRemote);
 
     if (!remoteUrl) {
         throw new Error(`Git remote is not set for ${branchRemote}`);
     }
 
-    const commitHash = await getCommitHashForCurrentBranch();
+    const commitHash: string = await getCommitHashForCurrentBranch();
 
     console.log(
         `👀 Searching for builds for branch %s with commit %s...`,
@@ -44,7 +29,7 @@ try {
         chalk.bold(commitHash)
     );
 
-    const normalizedRemoteUrl = normalizeRemoteUrl(remoteUrl);
+    const normalizedRemoteUrl: string = normalizeRemoteUrl(remoteUrl);
     const buildsProvider = await getBuildsProvider(normalizedRemoteUrl);
 
     if (!buildsProvider || typeof buildsProvider !== 'function') {
@@ -53,13 +38,11 @@ try {
         );
     }
 
-    const buildResults = /** @type {BuildsResults} */ (
-        await buildsProvider({
-            commitHash,
-            branchName,
-            remoteUrl: normalizedRemoteUrl,
-        })
-    );
+    const buildResults: BuildsResults = await buildsProvider({
+        commitHash,
+        branchName,
+        remoteUrl: normalizedRemoteUrl,
+    });
 
     if (!buildResults) {
         console.log(`
@@ -96,16 +79,16 @@ try {
                 buildStatus.state === 'SUCCESSFUL'
                     ? chalk.green('✅ Successful')
                     : buildStatus.state === 'FAILED'
-                    ? chalk.bold.red('❌ Failed')
-                    : buildStatus.state === 'INPROGRESS'
-                    ? chalk.bold.blue('🕑 In progress')
-                    : buildStatus.state === 'PENDING'
-                    ? chalk.bold.yellow('⏳ Pending')
-                    : buildStatus.state === 'SKIPPED'
-                    ? chalk.bold.yellow('⏭️ Skipped')
-                    : buildStatus.state === 'CANCELLED'
-                    ? chalk.bold.grey('❌ Cancelled')
-                    : chalk.bold.grey('❔ Unknown')
+                      ? chalk.bold.red('❌ Failed')
+                      : buildStatus.state === 'INPROGRESS'
+                        ? chalk.bold.blue('🕑 In progress')
+                        : buildStatus.state === 'PENDING'
+                          ? chalk.bold.yellow('⏳ Pending')
+                          : buildStatus.state === 'SKIPPED'
+                            ? chalk.bold.yellow('⏭️ Skipped')
+                            : buildStatus.state === 'CANCELLED'
+                              ? chalk.bold.grey('❌ Cancelled')
+                              : chalk.bold.grey('❔ Unknown')
             } - ${chalk.bold(buildStatus.name)}`
         );
         console.log(`   ${buildStatus.url}`);

@@ -5,6 +5,7 @@
 - [ ] Migrate to TypeScript
 - [ ] Show "ora" loading spinner
 - [ ] Consider using React Ink for CLI
+- [ ] Migrate to [oclif](https://oclif.io/)
 
 ## Commands
 

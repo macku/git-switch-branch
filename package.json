@@ -12,13 +12,15 @@
         "builds",
         "pipelines",
         "bitbucket",
-        "atlassian"
+        "atlassian",
+        "jira"
     ],
     "type": "module",
     "bin": {
         "git-switch-branch": "cli/git-switch-branch.ts",
         "git-prune-branches": "cli/git-prune-branches.ts",
-        "git-builds": "cli/git-builds.ts"
+        "git-builds": "cli/git-builds.ts",
+        "git-issues": "cli/git-issues.ts"
     },
     "repository": {
         "type": "git",

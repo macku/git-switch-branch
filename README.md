@@ -1,6 +1,6 @@
 # GIT helpers
 
-`git switch-branch` & `git prune-branches` & `git builds`
+`git switch-branch` & `git prune-branches` & `git builds` & `git issues`
 
 A few extra commands that will improve your developer productivity.
 
@@ -12,13 +12,14 @@ npm install -g git-switch-branch
 git config --global alias.switch-branch '!git-switch-branch'
 git config --global alias.prune-branches '!git-prune-branches'
 git config --global alias.builds '!git-builds'
+git config --global alias.issues '!git-issues'
 ```
 
 ### Credentials
 
-> This step is optional and required only if you plan to use the `git builds` command.
+> This step is optional and required only if you plan to use the `git builds` or `git issues` commands.
 
-Before you use the `git builds` command, you need to create a config file that includes access tokens to Bitbucket Cloud and/or Data Center:
+Before you use the `git builds` or `git issues` commands, you need to create a config file that includes access tokens:
 
 1. Create a config file under your user directory:
 
@@ -57,11 +58,20 @@ touch ~/.atl-config
     # Select the "read_api" scope
     # https://docs.gitlab.com/ee/user/group/settings/group_access_tokens.html
     GITLAB_TOKEN=<<PERSONAL-ACCESS-TOKEN>>
+
+    # Jira setup
+    # If you want to use the git issues command to view your Jira issues
+    # 6. Base URL to your Jira instance (e.g. https://your-domain.atlassian.net)
+    JIRA_URL=https://your-domain.atlassian.net
+    # 7. Your Jira email address
+    JIRA_EMAIL=your-email@example.com
+    # 8. Jira API token. Generate from: https://id.atlassian.com/manage-profile/security/api-tokens
+    JIRA_TOKEN=<<JIRA-API-TOKEN>>
     ```
 
 > Why do you need to generate and save access tokens?
 
-The password and access tokens are only required if you want to use the `git build` alias.
+The password and access tokens are only required if you want to use the `git build` or `git issues` alias.
 
 ## Usage
 
@@ -94,3 +104,17 @@ git builds
 ```
 
 ![git builds demo](docs/git-builds.gif)
+
+### Issues
+
+Shows Jira issues assigned to the current user:
+
+```
+git issues
+```
+
+Filter issues by status:
+
+```
+git issues --status="In Progress"
+```

@@ -6,6 +6,7 @@
 - [ ] Show "ora" loading spinner
 - [ ] Consider using React Ink for CLI
 - [ ] Migrate to [oclif](https://oclif.io/)
+- [ ] https://github.com/trivago/prettier-plugin-sort-imports/tree/main
 
 ## Commands
 
@@ -25,10 +26,10 @@
 
 - [ ] Allow to type e.g. branch pattern to prune
 
-## 🆕 git issues (or git work)
+## ✅ git issues (or git work)
 
-- [ ] Show all the Jira issues associated with the current user
-- [ ] Allow to filter issues by status or using
+- [x] Show all the Jira issues associated with the current user
+- [x] Allow to filter issues by status
 
 ## 🆕 git start-work
 

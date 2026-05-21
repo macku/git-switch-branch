@@ -10,7 +10,7 @@ interface GitlabPipelineStatus {
     pipeline_id: string;
 }
 
-const gitlabWebUrl = `https://gitlab.com/`;
+const gitlabWebUrl = `https://gitlab.com`;
 const baseUrl = `https://gitlab.com/api/v4`;
 
 const getProjectIdFromUrl = (url: URL): string => {
@@ -23,12 +23,15 @@ const getProjectIdFromUrl = (url: URL): string => {
 };
 
 const getProjectAndRepoFromUrl = (url: URL): string => {
-    const parts = url.pathname
-        .replace(/^\/+/, '')
-        .replace(/\/+$/, '')
-        .split('/');
+    // const parts = url.pathname
+    //     .replace(/^\/+/, '')
+    //     .replace(/\/+$/, '')
+    //     .split('/');
+    //
+    //
+    // return parts.slice(0, 2).join('/');
 
-    return parts.slice(0, 2).join('/');
+    return url.pathname.replace(/^\/+/, '').replace(/\/+$/, '');
 };
 
 const getPipelineJobUrl = (remoteUrl: URL, jobId: string): string => {
